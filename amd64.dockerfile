@@ -15,6 +15,7 @@ RUN \
 		python3-pip \
 		ffmpeg \
 		mkvtoolnix \
+		zip \
 		tidy && \
 	echo "************ setup SMA ************" && \
 	echo "************ setup directory ************" && \
