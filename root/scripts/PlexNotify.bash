@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 version="1.0.000"
-
 notfidedBy="Sonarr"
-arrRootFolderPath="$(dirname "$sonarr_episodefile_path")"
-arrFolderPath="$radarr_movie_path"
+arrRootFolderPath="$(dirname "$sonarr_series_path")"
+arrFolderPath="$sonarr_series_path"
 arrEventType="$sonarr_eventtype"
 movieExtrasPath="$1"
 
