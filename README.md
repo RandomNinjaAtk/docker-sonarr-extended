@@ -1,1 +1,5 @@
-# sonarr-extended
+# [RandomNinjaAtk/sonarr-extended](https://github.com/RandomNinjaAtk/docker-sonarr-extended)
+[![Docker Build](https://img.shields.io/docker/cloud/automated/randomninjaatk/sonarr-extended?style=flat-square)](https://hub.docker.com/r/randomninjaatk/sonarr-extended)
+[![Docker Pulls](https://img.shields.io/docker/pulls/randomninjaatk/sonarr-extended?style=flat-square)](https://hub.docker.com/r/randomninjaatk/sonarr-extended)
+[![Docker Stars](https://img.shields.io/docker/stars/randomninjaatk/sonarr-extended?style=flat-square)](https://hub.docker.com/r/randomninjaatk/sonarr-extended)
+[![Docker Hub](https://img.shields.io/badge/Open%20On-DockerHub-blue?style=flat-square)](https://hub.docker.com/r/randomninjaatk/sonarr-extended)
