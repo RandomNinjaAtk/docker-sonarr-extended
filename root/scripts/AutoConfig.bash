@@ -27,10 +27,10 @@ log () {
 }
 
 log "Getting Trash Guide Recommended Sonarr Naming..."
-standardNaming="$(curl -s https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md | grep "{Series" | head -n 1)"
-dailyNaming="$(curl -s https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md | grep "{Series" | grep "{Air-Date}")"
-animeNaming="$(curl -s https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md | grep "{Series" | grep "{absolute")"
-seriesNaming="$(curl -s https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md | grep "{Series" | head -n4 | tail -n1)"
+standardNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | head -n 1)"
+dailyNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | grep "{Air-Date}")"
+animeNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | grep "{absolute")"
+seriesNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | head -n4 | tail -n1)"
 
 log "Updating Sonarr File Naming..."
 updateArr=$(curl -s "$arrUrl/api/v3/config/naming" -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $arrApiKey" --data-raw '{
