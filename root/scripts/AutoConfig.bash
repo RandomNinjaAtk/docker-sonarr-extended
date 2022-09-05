@@ -33,7 +33,7 @@ animeNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/d
 seriesNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | head -n4 | tail -n1)"
 
 log "Updating Sonarr File Naming..."
-updateArr=$(curl -s "$arrUrl/api/v3/config/naming" -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $arrApiKey" --data-raw '{
+updateArr=$(curl -s "$arrUrl/api/v3/config/naming" -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $arrApiKey" --data-raw "{
 	\"renameEpisodes\":true,
 	\"replaceIllegalCharacters\":true,
 	\"multiEpisodeStyle\":4,
@@ -50,7 +50,7 @@ updateArr=$(curl -s "$arrUrl/api/v3/config/naming" -X PUT -H "Content-Type: appl
 	\"separator\":\" - \",
 	\"numberStyle\":\"S{season:00}E{episode:00}\",
 	\"id\":1
-	}')    
+	}")    
 log "Complete"
 
 log "Updating Sonrr Media Management..."
@@ -75,11 +75,11 @@ updateArr=$(curl -s "$arrUrl/api/v3/config/mediamanagement" -X PUT -H "Content-T
 log "Complete"
 
 log "Updating Sonarr Medata Settings..."
-updateArr=$(curl -s "$arrUrl/api/v3/metadata/1?" -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $arrApiKey" --data-raw '{"enable":true,"name":"Kodi (XBMC) / Emby","fields":[{"name":"seriesMetadata","value":true},{"name":"seriesMetadataUrl","value":false},{"name":"episodeMetadata","value":true},{"name":"seriesImages","value":true},{"name":"seasonImages","value":true},{"name":"episodeImages","value":true}],"implementationName":"Kodi (XBMC) / Emby","implementation":"XbmcMetadata","configContract":"XbmcMetadataSettings","infoLink":"https://wiki.servarr.com/sonarr/supported#xbmcmetadata","tags":[],"id":1}'
+updateArr=$(curl -s "$arrUrl/api/v3/metadata/1?" -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $arrApiKey" --data-raw '{"enable":true,"name":"Kodi (XBMC) / Emby","fields":[{"name":"seriesMetadata","value":true},{"name":"seriesMetadataUrl","value":false},{"name":"episodeMetadata","value":true},{"name":"seriesImages","value":true},{"name":"seasonImages","value":true},{"name":"episodeImages","value":true}],"implementationName":"Kodi (XBMC) / Emby","implementation":"XbmcMetadata","configContract":"XbmcMetadataSettings","infoLink":"https://wiki.servarr.com/sonarr/supported#xbmcmetadata","tags":[],"id":1}')
 
 log "Configuring Sonarr Custom Scripts"
 if curl -s "$arrUrl/api/v3/notification" -H "X-Api-Key: ${arrApiKey}" | jq -r .[].name | grep "PlexNotify.bash" | read; then
-	log "PlexNotify.bash already added to Radarr custom scripts"
+	log "PlexNotify.bash already added to Sonarr custom scripts"
 else
 	log "Adding PlexNotify.bash to Sonarr custom scripts"
   # Send a command to check file path, to prevent error with adding...
