@@ -4,3 +4,8 @@ manifests:
     platform:
       architecture: amd64
       os: linux
+  - image: randomninjaatk/sonarr-extended:arm64v8
+    platform:
+      architecture: arm64
+      os: linux
+      variant: v8
