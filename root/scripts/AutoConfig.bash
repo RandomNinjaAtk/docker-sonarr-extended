@@ -33,7 +33,8 @@ animeNaming="$(curl -s https://raw.githubusercontent.com/TRaSH-/Guides/master/do
 seriesNaming="$(curl -s https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md | grep "{Series" | head -n4 | tail -n1)"
 
 log "Updating Sonarr File Naming..."
-updateArr=$(curl -s "$arrUrl/api/v3/config/naming" -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $arrApiKey" --data-raw "{\"renameEpisodes\":true,
+updateArr=$(curl -s "$arrUrl/api/v3/config/naming" -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $arrApiKey" --data-raw '{
+	\"renameEpisodes\":true,
 	\"replaceIllegalCharacters\":true,
 	\"multiEpisodeStyle\":4,
 	\"standardEpisodeFormat\":\"$standardNaming\",
@@ -48,7 +49,8 @@ updateArr=$(curl -s "$arrUrl/api/v3/config/naming" -X PUT -H "Content-Type: appl
 	\"replaceSpaces\":true,
 	\"separator\":\" - \",
 	\"numberStyle\":\"S{season:00}E{episode:00}\",
-	\"id\":1}')    
+	\"id\":1
+	}')    
 log "Complete"
 
 log "Updating Sonrr Media Management..."
