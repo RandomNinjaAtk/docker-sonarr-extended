@@ -27,23 +27,31 @@ log () {
 }
 
 log "Getting Trash Guide Recommended Sonarr Naming..."
-fileNaming="$(curl -s https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Radarr/Radarr-recommended-naming-scheme.md | grep "{Movie Clean" | head -n 1)"
+standardNaming="$(curl -s https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md | grep "{Series" | head -n 1)"
+dailyNaming="$(curl -s https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md | grep "{Series" | grep "{Air-Date}")"
+animeNaming="$(curl -s https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md | grep "{Series" | grep "{absolute")"
+seriesNaming="$(curl -s https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md | grep "{Series" | head -n4 | tail -n1)"
 
-log "Updating Sonarr Moving Naming..."
-#updateArr=$(curl -s "$arrUrl/api/v3/config/naming" -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $arrApiKey" --data-raw "{
-#    \"renameMovies\":true,
-#    \"replaceIllegalCharacters\":true,
-#    \"colonReplacementFormat\":\"delete\",
-#    \"standardMovieFormat\":\"$movieNaming\",
-#    \"movieFolderFormat\":\"{Movie CleanTitle} ({Release Year})\",
-#    \"includeQuality\":false,
-#    \"replaceSpaces\":false,
-#    \"id\":1
-#    }")
-    
+log "Updating Sonarr File Naming..."
+updateArr=$(curl -s "$arrUrl/api/v3/config/naming" -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $arrApiKey" --data-raw "{\"renameEpisodes\":true,
+	\"replaceIllegalCharacters\":true,
+	\"multiEpisodeStyle\":4,
+	\"standardEpisodeFormat\":\"$standardNaming\",
+	\"dailyEpisodeFormat\":\"$dailyNaming\",
+	\"animeEpisodeFormat\":\"$animeNaming\",
+	\"seriesFolderFormat\":\"$seriesNaming\",
+	\"seasonFolderFormat\":\"Season {season:00}\",
+	\"specialsFolderFormat\":\"Season {season:00}\",
+	\"includeSeriesTitle\":false,
+	\"includeEpisodeTitle\":false,
+	\"includeQuality\":false,
+	\"replaceSpaces\":true,
+	\"separator\":\" - \",
+	\"numberStyle\":\"S{season:00}E{episode:00}\",
+	\"id\":1}')    
 log "Complete"
 
-log "Updating Radarr Media Management..."
+log "Updating Sonrr Media Management..."
 updateArr=$(curl -s "$arrUrl/api/v3/config/mediamanagement" -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $arrApiKey" --data-raw '{"autoUnmonitorPreviouslyDownloadedEpisodes":false,
   "recycleBin":"",
   "recycleBinCleanupDays":7,
