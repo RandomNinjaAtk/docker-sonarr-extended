@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.002"
+scriptVersion="1.0.003"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -30,7 +30,7 @@ log () {
 seriesTvdbId="$(curl -s --header "X-Api-Key:"$arrApiKey --request GET  "$arrUrl/api/v3/health" | jq -r '.[] | select(.source=="RemovedSeriesCheck") | select(.type=="error")' | grep "message" | grep -o '[[:digit:]]*')"
 
 if [ -z "$seriesTvdbId" ]; then
-  log "No invalid tvdbid's reported by Sonarr health check, skipping..."
+  log "No invalid series (tvdbid) reported by Sonarr health check, skipping..."
   exit
 fi
 
