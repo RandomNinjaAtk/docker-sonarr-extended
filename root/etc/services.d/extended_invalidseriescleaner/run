@@ -3,7 +3,7 @@ if [ "$enableInvalidSeriesAutoCleaner" != "true" ]; then
 	sleep infinity
 else
 	echo "Waiting for Sonarr to startup..."
-	sleep 2m
+	sleep 20m
 fi
 
 echo "Starting Script...."
