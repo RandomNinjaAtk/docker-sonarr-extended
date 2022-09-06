@@ -3,7 +3,7 @@ if [ "$enableAutoConfig" != "true" ]; then
 	echo "AutoConfig Script disabled, enable by setting parameter: enableAutoConfig=true"
 	sleep infinity
 else
-	echo "Waiting for Radarr to startup..."
+	echo "Waiting for Sonarr to startup..."
 	sleep 2m
 fi
 
