@@ -4,7 +4,14 @@
 [![Docker Stars](https://img.shields.io/docker/stars/randomninjaatk/sonarr-extended?style=flat-square)](https://hub.docker.com/r/randomninjaatk/sonarr-extended)
 [![Docker Hub](https://img.shields.io/badge/Open%20On-DockerHub-blue?style=flat-square)](https://hub.docker.com/r/randomninjaatk/sonarr-extended)
 
-[![sonarr](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/sonarr-banner.png)](https://sonarr.tv/)
+<table>
+  <tr>
+    <td><img src="https://raw.githubusercontent.com/RandomNinjaAtk/unraid-templates/master/randomninjaatk/img/sonarr.png" width="200"></td>
+    <td><img src="https://github.com/RandomNinjaAtk/docker-lidarr-extended/raw/main/.github/plus.png" width="100"></td>
+    <td><img src="https://raw.githubusercontent.com/RandomNinjaAtk/unraid-templates/master/randomninjaatk/img/amtd.png" width="200"></td>
+  </tr>
+ </table>
+
 
 
 ### What is Sonarr Extended:
