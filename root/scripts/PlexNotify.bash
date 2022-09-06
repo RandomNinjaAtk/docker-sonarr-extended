@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-version="1.0.000"
+version="1.0.001"
 notfidedBy="Sonarr"
 arrRootFolderPath="$(dirname "$sonarr_series_path")"
 arrFolderPath="$sonarr_series_path"
 arrEventType="$sonarr_eventtype"
-movieExtrasPath="$1"
+extrasPath="$1"
 
 # Debugging Settings
 #enableExtras=false
@@ -23,10 +23,15 @@ log () {
 }
 
 if [ "$enableExtras" == "true" ]; then
-    if [ -z "$movieExtrasPath" ]; then
-		log "MovieExtras script is enabled, skipping..."
+    if [ -z "$extrasPath" ]; then
+		log "Extras script is enabled, skipping..."
 		exit
 	fi
+fi
+
+if [ ! -z "$extrasPath" ]; then
+	arrFolderPath="$extrasPath"
+	arrRootFolderPath="$(dirname "$extrasPath")"
 fi
 
 if [ "$arrEventType" == "Test" ]; then
