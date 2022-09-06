@@ -67,6 +67,10 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e enableAutoConfig=true` | true = enabled :: Enables AutoConfig script to run after startup |
 | `-e enableRecyclarr=true` | true = enabled :: Enables Recyclarr to run every 4 hours |
 | `-e enableQueueCleaner=true` | true = enabled :: Enables QueueCleaner Script that automatically removes stuck downloads that cannot be automatically imported on a 15 minute interval |
+| `-e enableExtras=true` | true = enabled :: Enables Extras script to run during download import process |
+| `-e extrasType=all` | all or trailers :: all downloads all available videos (trailers, clips, featurette, etc...) :: trailers only downloads trailers |
+| `-e extrasLanguages=en` | Set the primary desired language, if not found, fallback to next langauge in the list... (this is a "," separated list of ISO 639-1 language codes) |
+| `-e extrasOfficialOnly=false` | true = enabled :: Skips extras that are not considered/marked as Official from TMDB site. |
 | `-e PUID=1000` | for UserID - see below for explanation |
 | `-e PGID=1000` | for GroupID - see below for explanation |
 | `-e TZ=Europe/London` | Specify a timezone to use EG Europe/London, this is required for Sonarr |
@@ -92,6 +96,10 @@ docker create \
   -e enableAutoConfig=true \
   -e enableRecyclarr=true \
   -e enableQueueCleaner=true \
+  -e enableExtras=true \
+  -e extrasType=all \
+  -e extrasLanguages=en \
+  -e extrasOfficialOnly=false \
   -e plexUrl=http://x.x.x.x:32400 \
   -e plexToken=Token_Goes_Here \
   randomninjaatk/radarr-extended:latest
@@ -117,6 +125,10 @@ services:
       - enableAutoConfig=true
       - enableRecyclarr=true
       - enableQueueCleaner=true
+      - enableExtras=true
+      - extrasType=all
+      - extrasLanguages=en
+      - extrasOfficialOnly=false
       - plexUrl=http://x.x.x.x:32400
       - plexToken=Token_Goes_Here
     ports:
