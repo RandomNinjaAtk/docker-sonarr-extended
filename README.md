@@ -23,6 +23,8 @@ This containers base image is provided by: [linuxserver/sonarr](https://github.c
   * Optimized file/folder naming (based on trash guides)
   * Congifures media management settings
   * Configures metadata settings
+* Daily Series Episode Trimmer
+  * Keep only the latest 14 episodes of a daily series
 * Recyclarr built-in
   * Auto configures Custom Formats
   * Auto configures Custom Format Scores
