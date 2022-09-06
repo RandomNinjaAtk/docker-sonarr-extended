@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.000"
+scriptVersion="1.0.001"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -40,6 +40,13 @@ for tvdbId in $(echo $seriesTvdbId); do
 
     # Send command to Sonarr to delete series and files
     arrCommand=$(curl -s --header "X-Api-Key:"$arrApiKey --request DELETE "$arrUrl/api/v3/series/$seriesId?deleteFiles=true")
+    
+
+    # trigger a plex scan to rmeove the deleted series
+    folderToScan="$(dirname "$seriesPath")"
+    log "Using PlexNotify.bash to update Plex.... ($folderToScan)"
+    bash /config/extended/scripts/PlexNotify.bash "$folderToScan" "true"
 done
+
 
 exit
