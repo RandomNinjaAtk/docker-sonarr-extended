@@ -3,7 +3,7 @@ if [ "$enableQueueCleaner" != "true" ]; then
 	echo "QueueCleaner Script disabled, enable by setting parameter: enableQueueCleaner=true"
 	sleep infinity
 else
-	echo "Waiting for Radarr to startup..."
+	echo "Waiting for Sonarr to startup..."
 	sleep 2m
 fi
 
