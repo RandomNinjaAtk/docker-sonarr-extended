@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-version="1.0.001"
+version="1.0.002"
 notfidedBy="Sonarr"
 arrRootFolderPath="$(dirname "$sonarr_series_path")"
 arrFolderPath="$sonarr_series_path"
@@ -31,7 +31,11 @@ fi
 
 if [ ! -z "$extrasPath" ]; then
 	arrFolderPath="$extrasPath"
-	arrRootFolderPath="$(dirname "$extrasPath")"
+	if [ "$2" == "true" ]; then
+		arrRootFolderPath="$extrasPath"
+	else
+		arrRootFolderPath="$(dirname "$extrasPath")"
+	fi
 fi
 
 if [ "$arrEventType" == "Test" ]; then
