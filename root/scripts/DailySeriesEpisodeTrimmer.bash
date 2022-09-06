@@ -18,6 +18,11 @@ if [ -f "/config/logs/DailySeriesEpisodeTrimmer.txt" ]; then
 	find /config/logs -type f -name "DailySeriesEpisodeTrimmer.txt" -size +1024k -delete
 fi
 
+log () {
+  m_time=`date "+%F %T"`
+  echo $m_time" :: DailySeriesEpisodeTrimmer :: "$1
+}
+
 exec &>> "/config/logs/DailySeriesEpisodeTrimmer.txt"
 chmod 666 "/config/logs/DailySeriesEpisodeTrimmer.txt"
 
