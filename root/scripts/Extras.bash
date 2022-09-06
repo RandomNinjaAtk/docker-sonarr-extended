@@ -9,11 +9,11 @@ if [ ! -z "$1" ]; then
 fi
 
 # Debugging
-arrItemId=818
-extrasLanguages=en
-extrasType=all
-extrasOfficialOnly=false
-enableExtras=true
+#arrItemId=818
+#extrasLanguages=en
+#extrasType=all
+#extrasOfficialOnly=false
+#enableExtras=true
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
