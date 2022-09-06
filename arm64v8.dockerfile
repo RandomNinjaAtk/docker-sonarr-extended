@@ -26,6 +26,10 @@ RUN \
 		ffmpeg \
 		mkvtoolnix \
 		tidy && \
+	echo "************ install python packages ************" && \
+	python3 -m pip install --no-cache-dir -U \
+		yq \
+		yt-dlp && \
 	echo "************ setup SMA ************" && \
 	echo "************ setup directory ************" && \
 	mkdir -p ${SMA_PATH} && \
@@ -39,10 +43,7 @@ RUN \
 	chmod g+w ${SMA_PATH}/config/sma.log && \
 	echo "************ install pip dependencies ************" && \
 	python3 -m pip install --user --upgrade pip && \	
-	pip3 install -r ${SMA_PATH}/setup/requirements.txt && \
-	echo "************ install python packages ************" && \
-	python3 -m pip install --no-cache-dir -U \
-		yq 
+	pip3 install -r ${SMA_PATH}/setup/requirements.txt
 	
 WORKDIR /config
 
