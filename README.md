@@ -32,7 +32,7 @@ This containers base image is provided by: [linuxserver/sonarr](https://github.c
 * Plex Notify Script
   * Reduce Plex scanning by notifying Plex the exact folder to scan
 * Queue Cleaner Script
-  * Automatically removes downloads that have a "warning" or "failed" status that will not auto-import into Radarr, which enables Radarr to automatically re-search for the Title
+  * Automatically removes downloads that have a "warning" or "failed" status that will not auto-import into Sonarr, which enables Radarr to automatically re-search for the Title
 
 
 ## Supported Architectures
@@ -71,6 +71,54 @@ Container images are configured using parameters passed at runtime (such as thos
 ## Application Setup
 
 Access the webui at `<your-ip>:8989`, for more information check out [Sonarr](https://sonarr.tv/).
+
+## Docker Examples:
+These examples are untested, but should work or at least give you a good starting point....
+
+### docker
+
+```
+docker create \
+  --name=sonarr-extended \
+  -v /path/to/config/files:/config \
+  -p 8989:8989 \
+  -e TZ=America/New_York \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e enableAutoConfig=true \
+  -e enableRecyclarr=true \
+  -e enableQueueCleaner=true \
+  -e plexUrl=http://x.x.x.x:32400 \
+  -e plexToken=Token_Goes_Here \
+  randomninjaatk/radarr-extended:latest
+```
+
+
+### docker-compose
+
+Compatible with docker-compose v2 schemas.
+
+```
+version: "2.1"
+services:
+  sonarr-extended:
+    image: randomninjaatk/sonarr-extended:latest
+    container_name: sonarr-extended
+    volumes:
+      - /path/to/config/files:/config
+    environment:
+      - TZ=America/New_York
+      - PUID=1000
+      - PGID=1000
+      - enableAutoConfig=true
+      - enableRecyclarr=true
+      - enableQueueCleaner=true
+      - plexUrl=http://x.x.x.x:32400
+      - plexToken=Token_Goes_Here
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+```
 
 # Credits
 - [ffmpeg](https://ffmpeg.org/)
