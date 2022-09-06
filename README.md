@@ -19,6 +19,10 @@ For more details, visit the [Wiki](https://github.com/RandomNinjaAtk/docker-sona
 This containers base image is provided by: [linuxserver/sonarr](https://github.com/linuxserver/docker-sonarr)
 
 ## Features
+* Downloading TV **Trailers** and **Extras** using online sources for use in popular applications (Plex): 
+  * Connects to Sonarr to automatically download trailers for Movies in your existing library
+  * Downloads videos using yt-dlp automatically
+  * Names videos correctly to match Plex naming convention
 * Auto Configure Sonarr with optimized settings
   * Optimized file/folder naming (based on trash guides)
   * Congifures media management settings
