@@ -1,0 +1,17 @@
+#!/usr/bin/with-contenv bash
+if [ "$enableInvalidSeriesAutoCleaner" != "true" ]; then
+	sleep infinity
+else
+	echo "Waiting for Sonarr to startup..."
+	sleep 2m
+fi
+
+echo "Starting Script...."
+for (( ; ; )); do
+	let i++
+	bash /config/extended/scripts/InvalidSeriesAutoCleaner.bash
+	echo "Script sleeping for 12 hours..."
+	sleep 12h
+done
+
+exit $?
