@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.000"
+scriptVersion="1.0.001"
 arrEventType="$sonarr_eventtype"
 arrItemId=$sonarr_series_id
 tmdbApiKey="3b7751e3179f796565d88fdb2fcdf426"
@@ -42,7 +42,7 @@ if [ "$arrEventType" == "Test" ]; then
 	exit 0	
 fi
 
-#exec &>> "/config/logs/Extras.txt"
+exec &>> "/config/logs/Extras.txt"
 chmod 666 "/config/logs/Extras.txt"
 
 if [ "$enableExtras" != "true" ]; then
