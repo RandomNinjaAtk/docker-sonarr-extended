@@ -27,7 +27,7 @@ This containers base image is provided by: [linuxserver/sonarr](https://github.c
 
 ## Features
 * Downloading TV **Trailers** and **Extras** using online sources for use in popular applications (Plex): 
-  * Connects to Sonarr to automatically download trailers for Movies in your existing library
+  * Connects to Sonarr to automatically download trailers for TV Series in your existing library
   * Downloads videos using yt-dlp automatically
   * Names videos correctly to match Plex naming convention
 * Auto Configure Sonarr with optimized settings
