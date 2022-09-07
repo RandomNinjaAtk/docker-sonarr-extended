@@ -37,8 +37,7 @@ This containers base image is provided by: [linuxserver/sonarr](https://github.c
 * Daily Series Episode Trimmer
   * Keep only the latest 14 episodes of a daily series
 * Recyclarr built-in
-  * Auto configures Custom Formats
-  * Auto configures Custom Format Scores
+  * Auto configures Release Profiles + Scores
   * Auto configures optimzed quality definitions
 * Plex Notify Script
   * Reduce Plex scanning by notifying Plex the exact folder to scan
