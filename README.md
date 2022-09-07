@@ -32,7 +32,7 @@ This containers base image is provided by: [linuxserver/sonarr](https://github.c
   * Names videos correctly to match Plex naming convention
 * Auto Configure Sonarr with optimized settings
   * Optimized file/folder naming (based on trash guides)
-  * Congifures media management settings
+  * Configures media management settings
   * Configures metadata settings
 * Daily Series Episode Trimmer
   * Keep only the latest 14 episodes of a daily series
