@@ -42,7 +42,7 @@ This containers base image is provided by: [linuxserver/sonarr](https://github.c
 * Plex Notify Script
   * Reduce Plex scanning by notifying Plex the exact folder to scan
 * Queue Cleaner Script
-  * Automatically removes downloads that have a "warning" or "failed" status that will not auto-import into Sonarr, which enables Radarr to automatically re-search for the Title
+  * Automatically removes downloads that have a "warning" or "failed" status that will not auto-import into Sonarr, which enables Sonarr to automatically re-search for the Title
 
 ### Plex Example
 ![](https://raw.githubusercontent.com/RandomNinjaAtk/docker-amtd/master/.github/amvtd-plex-example.jpg)
