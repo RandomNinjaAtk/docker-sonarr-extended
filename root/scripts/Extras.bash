@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.003"
+scriptVersion="1.0.004"
 arrEventType="$sonarr_eventtype"
 arrItemId=$sonarr_series_id
 tmdbApiKey="3b7751e3179f796565d88fdb2fcdf426"
@@ -51,7 +51,7 @@ chmod 666 "/config/logs/Extras.txt"
 if [ "$enableExtras" != "true" ]; then
     log "Script disabled, exiting..."
     log "Enable by setting enableExtras=true"
-    #exit
+    exit
 fi
 
 if find /config -type f -name "cookies.txt" | read; then
