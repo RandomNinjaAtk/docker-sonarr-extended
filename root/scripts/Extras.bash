@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.001"
+scriptVersion="1.0.002"
 arrEventType="$sonarr_eventtype"
 arrItemId=$sonarr_series_id
 tmdbApiKey="3b7751e3179f796565d88fdb2fcdf426"
+autoScan="false"
+updatePlex="false"
 
 if [ ! -z "$1" ]; then
-    arrItemId=$1
+    arrItemId="$1"
+    autoScan="true"
 fi
 
 # Debugging
@@ -170,13 +173,28 @@ for id in $(echo "$tmdbVideosListDataIds"); do
         rm "$finalPath/$tmdbExtraTitleClean.mkv"
         log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle :: INFO: deleted: $finalPath/$tmdbExtraTitleClean.mkv"
     fi
-    
+    updatePlex="true"
 done
 
 # Process item with PlexNotify.bash if plexToken is configured
 if [ ! -z "$plexToken" ]; then
-    log "Using PlexNotify.bash to update Plex.... ($itemPath)"
-    bash /config/extended/scripts/PlexNotify.bash "$itemPath"
+    # Always update plex if extra is downloaded
+    if [ "$updatePlex" == "true" ]; then
+        log "Using PlexNotify.bash to update Plex...."
+        bash /config/extended/scripts/PlexNotify.bash "$itemPath"
+        exit
+    fi
+    
+    # Do not notify plex if this script was triggered by the AutoExtras.bash and no Extras were downloaded
+    if [ "$autoScan" == "true" ]; then 
+        log "Skipping plex notification, not needed...."
+        exit
+    else
+        log "Using PlexNotify.bash to update Plex...."
+        bash /config/extended/scripts/PlexNotify.bash "$itemPath"
+        exit
+    fi
 fi
+
 
 exit
