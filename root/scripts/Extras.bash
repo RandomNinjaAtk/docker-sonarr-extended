@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.002"
+scriptVersion="1.0.003"
 arrEventType="$sonarr_eventtype"
 arrItemId=$sonarr_series_id
 tmdbApiKey="3b7751e3179f796565d88fdb2fcdf426"
@@ -13,7 +13,7 @@ fi
 
 # Debugging
 #arrItemId=818
-#extrasLanguages=en
+#extrasLanguages=en-US,it-IT
 #extrasType=all
 #extrasOfficialOnly=false
 #enableExtras=true
@@ -74,106 +74,105 @@ if [ ! -d "$itemPath" ]; then
     exit
 fi
 
-tmdbVideosListData=$(curl -s "https://api.themoviedb.org/3/tv/$tmdbId/videos?api_key=$tmdbApiKey" | jq -r '.results[] | select(.site=="YouTube")')
-
 IFS=',' read -r -a filters <<< "$extrasLanguages"
 for filter in "${filters[@]}"
-do
+do    
+    tmdbVideosListData=$(curl -s "https://api.themoviedb.org/3/tv/$tmdbId/videos?api_key=$tmdbApiKey&language=$filter" | jq -r '.results[] | select(.site=="YouTube")')
     log "$itemTitle :: Searching for \"$filter\" extras..."
     if [ "$extrasType" == "all" ]; then
-        tmdbVideosListDataIds=$(echo "$tmdbVideosListData" | jq -r "select(.iso_639_1==\"$filter\") | .id")
-        tmdbVideosListDataIdsCount=$(echo "$tmdbVideosListData" | jq -r "select(.iso_639_1==\"$filter\") | .id" | wc -l)
+        tmdbVideosListDataIds=$(echo "$tmdbVideosListData" | jq -r ".id")
+        tmdbVideosListDataIdsCount=$(echo "$tmdbVideosListData" | jq -r ".id" | wc -l)
     else
-        tmdbVideosListDataIds=$(echo "$tmdbVideosListData" | jq -r "select(.iso_639_1==\"$filter\" and .type==\"Trailer\") | .id")
-        tmdbVideosListDataIdsCount=$(echo "$tmdbVideosListData" | jq -r "select(.iso_639_1==\"$filter\" and .type==\"Trailer\") | .id" | wc -l)
+        tmdbVideosListDataIds=$(echo "$tmdbVideosListData" | jq -r "select(.type==\"Trailer\") | .id")
+        tmdbVideosListDataIdsCount=$(echo "$tmdbVideosListData" | jq -r "select(.type==\"Trailer\") | .id" | wc -l)
     fi
     if [ -z "$tmdbVideosListDataIds" ]; then
         log "$itemTitle :: None found..."
         continue
-    else
-        break
-    fi
-done
-
-if [ $tmdbVideosListDataIdsCount -le 0 ]; then
-    log "$itemTitle :: No Extras Found, skipping..."
-    exit
-fi
-
-log "$itemTitle :: $tmdbVideosListDataIdsCount Extras Found!"
-i=0
-for id in $(echo "$tmdbVideosListDataIds"); do
-    i=$(( i + 1))
-    tmdbExtraData="$(echo "$tmdbVideosListData" | jq -r "select(.id==\"$id\")")"
-    tmdbExtraTitle="$(echo "$tmdbExtraData" | jq -r .name)"
-    tmdbExtraTitleClean="$(echo "$tmdbExtraTitle" | sed -e "s/[^[:alpha:][:digit:]$^&_+=()'%;{},.@#]/ /g" -e "s/  */ /g" | sed 's/^[.]*//' | sed  's/[.]*$//g' | sed  's/^ *//g' | sed 's/ *$//g')"
-    tmdbExtraKey="$(echo "$tmdbExtraData" | jq -r .key)"
-    tmdbExtraType="$(echo "$tmdbExtraData" | jq -r .type)"
-    tmdbExtraOfficial="$(echo "$tmdbExtraData" | jq -r .official)"
-
-    if [ "$tmdbExtraOfficial" != "true" ]; then
-        if [ "$extrasOfficialOnly" == "true" ]; then
-            log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: Not official, skipping..."
-            continue
-        fi
     fi
 
-    if [ "$tmdbExtraType" == "Featurette" ]; then
-        extraFolderName="featurettes"
-    elif [ "$tmdbExtraType" == "Trailer" ]; then
-        extraFolderName="trailers"
-    elif [ "$tmdbExtraType" == "Behind the Scenes" ]; then
-        extraFolderName="behind the scenes"
-    else
-        extraFolderName="other"
-        log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: ERROR :: Extra Type Not found, placing in \"other\" folder..."
-        if [ -f "/config/logs/Extras-InvalidType.txt" ]; then
-            if cat "/config/logs/Extras-InvalidType.txt" | grep "$tmdbExtraType" | read; then
-                sleep 0.01
-            else
-                echo "$tmdbExtraType" >> "/config/logs/Extras-InvalidType.txt"
+    if [ $tmdbVideosListDataIdsCount -le 0 ]; then
+        log "$itemTitle :: No Extras Found, skipping..."
+        exit
+    fi
+
+    log "$itemTitle :: $tmdbVideosListDataIdsCount Extras Found!"
+    i=0
+    for id in $(echo "$tmdbVideosListDataIds"); do
+        i=$(( i + 1))
+        tmdbExtraData="$(echo "$tmdbVideosListData" | jq -r "select(.id==\"$id\")")"
+        tmdbExtraTitle="$(echo "$tmdbExtraData" | jq -r .name)"
+        tmdbExtraTitleClean="$(echo "$tmdbExtraTitle" | sed -e "s/[^[:alpha:][:digit:]$^&_+=()'%;{},.@#]/ /g" -e "s/  */ /g" | sed 's/^[.]*//' | sed  's/[.]*$//g' | sed  's/^ *//g' | sed 's/ *$//g')"
+        tmdbExtraKey="$(echo "$tmdbExtraData" | jq -r .key)"
+        tmdbExtraType="$(echo "$tmdbExtraData" | jq -r .type)"
+        tmdbExtraOfficial="$(echo "$tmdbExtraData" | jq -r .official)"
+
+        if [ "$tmdbExtraOfficial" != "true" ]; then
+            if [ "$extrasOfficialOnly" == "true" ]; then
+                log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: Not official, skipping..."
+                continue
             fi
         fi
-    fi
 
-    if [ ! -d "$itemPath/$extraFolderName" ]; then
-        mkdir -p "$itemPath/$extraFolderName"
-        chmod 777 "$itemPath/$extraFolderName"
-        chown abc:abc "$itemPath/$extraFolderName"
-    fi
+        if [ "$tmdbExtraType" == "Featurette" ]; then
+            extraFolderName="featurettes"
+        elif [ "$tmdbExtraType" == "Trailer" ]; then
+            extraFolderName="trailers"
+        elif [ "$tmdbExtraType" == "Behind the Scenes" ]; then
+            extraFolderName="behind the scenes"
+        else
+            extraFolderName="other"
+            log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: ERROR :: Extra Type Not found, placing in \"other\" folder..."
+            if [ -f "/config/logs/Extras-InvalidType.txt" ]; then
+                if cat "/config/logs/Extras-InvalidType.txt" | grep "$tmdbExtraType" | read; then
+                    sleep 0.01
+                else
+                    echo "$tmdbExtraType" >> "/config/logs/Extras-InvalidType.txt"
+                fi
+            fi
+        fi
 
-    finalPath="$itemPath/$extraFolderName"
+        if [ ! -d "$itemPath/$extraFolderName" ]; then
+            mkdir -p "$itemPath/$extraFolderName"
+            chmod 777 "$itemPath/$extraFolderName"
+            chown abc:abc "$itemPath/$extraFolderName"
+        fi
 
-    if [ -f "$finalPath/$tmdbExtraTitleClean.mkv" ]; then
-        log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: Already Downloaded, skipping..."
-        continue
-    fi
+        finalPath="$itemPath/$extraFolderName"
 
-    log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: Downloading..."
-    if [ ! -z "$cookiesFile" ]; then
-        yt-dlp --cookies "$cookiesFile" -o "$finalPath/$tmdbExtraTitleClean" --write-sub --sub-lang $extrasLanguages --embed-subs --merge-output-format mkv --no-mtime --geo-bypass "https://www.youtube.com/watch?v=$tmdbExtraKey" &>/dev/null
-    else
-        yt-dlp -o "$finalPath/$tmdbExtraTitleClean" --write-sub --sub-lang $extrasLanguages --embed-subs --merge-output-format mkv --no-mtime --geo-bypass "https://www.youtube.com/watch?v=$tmdbExtraKey" &>/dev/null
-    fi
-    if [ -f "$finalPath/$tmdbExtraTitleClean.mkv" ]; then
-        log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: Compete"
-        chmod 666 "$finalPath/$tmdbExtraTitleClean.mkv"
-        chown abc:abc "$finalPath/$tmdbExtraTitleClean.mkv"
-    else
-        log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: ERROR :: Download Failed"
-        continue
-    fi
+        if [ -f "$finalPath/$tmdbExtraTitleClean.mkv" ]; then
+            log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: Already Downloaded, skipping..."
+            continue
+        fi
 
-    if python3 /usr/local/sma/manual.py --config "/sma.ini" -i "$finalPath/$tmdbExtraTitleClean.mkv" -nt &>/dev/null; then
-        sleep 0.01
-        log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle :: Processed with SMA..."
-        rm  /usr/local/sma/config/*log*
-    else
-        log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle :: ERROR :: SMA Processing Error"
-        rm "$finalPath/$tmdbExtraTitleClean.mkv"
-        log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle :: INFO: deleted: $finalPath/$tmdbExtraTitleClean.mkv"
-    fi
-    updatePlex="true"
+        videoLanguages="$(echo "$extrasLanguages" | sed "s/-[[:alpha:]][[:alpha:]]//g")"
+
+        log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: Downloading..."
+        if [ ! -z "$cookiesFile" ]; then
+            yt-dlp --cookies "$cookiesFile" -o "$finalPath/$tmdbExtraTitleClean" --write-sub --sub-lang $videoLanguages --embed-subs --merge-output-format mkv --no-mtime --geo-bypass "https://www.youtube.com/watch?v=$tmdbExtraKey" &>/dev/null
+        else
+            yt-dlp -o "$finalPath/$tmdbExtraTitleClean" --write-sub --sub-lang $videoLanguages --embed-subs --merge-output-format mkv --no-mtime --geo-bypass "https://www.youtube.com/watch?v=$tmdbExtraKey" &>/dev/null
+        fi
+        if [ -f "$finalPath/$tmdbExtraTitleClean.mkv" ]; then
+            log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: Compete"
+            chmod 666 "$finalPath/$tmdbExtraTitleClean.mkv"
+            chown abc:abc "$finalPath/$tmdbExtraTitleClean.mkv"
+        else
+            log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: ERROR :: Download Failed"
+            continue
+        fi
+
+        if python3 /usr/local/sma/manual.py --config "/sma.ini" -i "$finalPath/$tmdbExtraTitleClean.mkv" -nt &>/dev/null; then
+            sleep 0.01
+            log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle :: Processed with SMA..."
+            rm  /usr/local/sma/config/*log*
+        else
+            log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle :: ERROR :: SMA Processing Error"
+            rm "$finalPath/$tmdbExtraTitleClean.mkv"
+            log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle :: INFO: deleted: $finalPath/$tmdbExtraTitleClean.mkv"
+        fi
+        updatePlex="true"
+    done
 done
 
 # Process item with PlexNotify.bash if plexToken is configured
