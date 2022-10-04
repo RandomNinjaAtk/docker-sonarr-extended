@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.004"
+scriptVersion="1.0.005"
 arrEventType="$sonarr_eventtype"
 arrItemId=$sonarr_series_id
 tmdbApiKey="3b7751e3179f796565d88fdb2fcdf426"
@@ -135,7 +135,6 @@ do
         if [ ! -d "$itemPath/$extraFolderName" ]; then
             mkdir -p "$itemPath/$extraFolderName"
             chmod 777 "$itemPath/$extraFolderName"
-            chown abc:abc "$itemPath/$extraFolderName"
         fi
 
         finalPath="$itemPath/$extraFolderName"
@@ -156,7 +155,6 @@ do
         if [ -f "$finalPath/$tmdbExtraTitleClean.mkv" ]; then
             log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: Compete"
             chmod 666 "$finalPath/$tmdbExtraTitleClean.mkv"
-            chown abc:abc "$finalPath/$tmdbExtraTitleClean.mkv"
         else
             log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: ERROR :: Download Failed"
             continue
