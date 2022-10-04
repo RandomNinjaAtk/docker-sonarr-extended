@@ -33,8 +33,7 @@ sed -i "s%arrApi%$arrApiKey%g" "/recyclarr.yaml"
 if [ ! -f /config/extended/configs/recyclarr.yaml ]; then
 	log "Importing default recylarr config file to: /config/extended/configs/recyclarr.yaml"
 	cp "/recyclarr.yaml" "/config/extended/configs/recyclarr.yaml"
-	chmod 766 "/config/extended/configs/recyclarr.yaml"
-	chown abc:abc "/config/extended/configs/recyclarr.yaml"
+	chmod 666 "/config/extended/configs/recyclarr.yaml"
 fi
 
 
