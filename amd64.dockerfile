@@ -16,6 +16,7 @@ RUN \
 		ffmpeg \
 		mkvtoolnix \
 		zip \
+		unzip \
 		tidy && \
 	echo "************ install python packages ************" && \
 	python3 -m pip install --no-cache-dir -U \
