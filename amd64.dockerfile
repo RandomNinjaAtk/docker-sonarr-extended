@@ -36,10 +36,10 @@ RUN \
 	python3 -m pip install --user --upgrade pip && \	
 	pip3 install -r ${SMA_PATH}/setup/requirements.txt && \
 	echo "************ install recyclarr ************" && \
-	mkdir -p /root/recyclarr && \
-	wget "https://github.com/recyclarr/recyclarr/releases/latest/download/recyclarr-linux-musl-x64.zip" -O "/root/recyclarr/recyclarr.zip" && \
-	unzip -o /root/recyclarr/recyclarr.zip -d /root/recyclarr &>/dev/null && \
-	chmod 777 /root/recyclarr/recyclarr
+	mkdir -p /recyclarr && \
+	wget "https://github.com/recyclarr/recyclarr/releases/latest/download/recyclarr-linux-musl-x64.zip" -O "/recyclarr/recyclarr.zip" && \
+	unzip -o /recyclarr/recyclarr.zip -d /recyclarr &>/dev/null && \
+	chmod 777 /recyclarr/recyclarr
 	
 WORKDIR /config
 
