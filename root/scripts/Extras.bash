@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.005"
+scriptVersion="1.0.006"
 arrEventType="$sonarr_eventtype"
 arrItemId=$sonarr_series_id
 tmdbApiKey="3b7751e3179f796565d88fdb2fcdf426"
@@ -54,13 +54,6 @@ if [ "$enableExtras" != "true" ]; then
     exit
 fi
 
-if find /config -type f -name "cookies.txt" | read; then
-    cookiesFile="$(find /config -type f -iname "cookies.txt" | head -n1)"
-    log "Cookies File Found!"
-else
-    log "Cookies File Not Found!"
-    cookiesFile=""
-fi
 
 arrItemData=$(curl -s "$arrUrl/api/v3/series/$arrItemId?apikey=$arrApiKey")
 itemTitle=$(echo "$arrItemData" | jq -r .title)
@@ -68,6 +61,24 @@ itemHasFile=$(echo "$arrItemData" | jq -r .hasFile)
 itemPath="$(echo "$arrItemData" | jq -r ".path")"
 imdbId="$(echo "$arrItemData" | jq -r ".imdbId")"
 tmdbId=$(curl -s "https://api.themoviedb.org/3/find/$imdbId?api_key=$tmdbApiKey&external_source=imdb_id" | jq -r .tv_results[].id)
+
+
+if find /config -type f -name "cookies.txt" | read; then
+    cookiesFile="$(find /config -type f -iname "cookies.txt" | head -n1)"
+    log "$itemTitle :: Cookies File Found!"
+else
+    log "$itemTitle :: Cookies File Not Found!"
+    cookiesFile=""
+fi
+
+if [ -f "/config/extended/extras/$tmdbId" ]; then
+	find "/config/extended/extras" -type f -mtime +7 -name "$tmdbId" -delete
+fi
+
+if [ -f "/config/extended/extras/$tmdbId" ]; then
+    log "$itemTitle :: Already processed Extras, waiting 7 days to re-check..."
+    exit
+fi
 
 if [ ! -d "$itemPath" ]; then
     log "$itemTitle :: ERROR: Item Path does not exist ($itemPath), Skipping..."
@@ -172,6 +183,15 @@ do
         updatePlex="true"
     done
 done
+
+# Mark Complete
+if [ ! -d "/config/extended/extras" ]; then 
+    mkdir -p "/config/extended/extras"
+    chmod 777 "/config/extended/extras"
+fi
+log "$itemTitle :: Marking/logging as Extras downloads complete (/config/extended/extras/$tmdbId)"
+touch "/config/extended/extras/$tmdbId"
+chmod 666 "/config/extended/extras/$tmdbId"
 
 # Process item with PlexNotify.bash if plexToken is configured
 if [ ! -z "$plexToken" ]; then
