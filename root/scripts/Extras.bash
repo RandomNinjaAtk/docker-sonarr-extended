@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.007"
+scriptVersion="1.0.008"
 arrEventType="$sonarr_eventtype"
 arrItemId=$sonarr_series_id
 tmdbApiKey="3b7751e3179f796565d88fdb2fcdf426"
@@ -71,11 +71,11 @@ else
     cookiesFile=""
 fi
 
-if [ -f "/config/extended/extras/$tmdbId" ]; then
-	find "/config/extended/extras" -type f -mtime +7 -name "$tmdbId" -delete
+if [ -f "/config/extended/logs/extras/$tmdbId" ]; then
+	find "/config/extended/logs/extras" -type f -mtime +7 -name "$tmdbId" -delete
 fi
 
-if [ -f "/config/extended/extras/$tmdbId" ]; then
+if [ -f "/config/extended/logs/extras/$tmdbId" ]; then
     log "$itemTitle :: Already processed Extras, waiting 7 days to re-check..."
     exit
 fi
@@ -185,13 +185,13 @@ do
 done
 
 # Mark Complete
-if [ ! -d "/config/extended/extras" ]; then 
-    mkdir -p "/config/extended/extras"
-    chmod 777 "/config/extended/extras"
+if [ ! -d "/config/extended/logs/extras" ]; then 
+    mkdir -p "/config/extended/logs/extras"
+    chmod 777 "/config/extended/logs/extras"
 fi
-log "$itemTitle :: Marking/logging as Extras downloads complete (/config/extended/extras/$tmdbId)"
-touch "/config/extended/extras/$tmdbId"
-chmod 666 "/config/extended/extras/$tmdbId"
+log "$itemTitle :: Marking/logging as Extras downloads complete (/config/extended/logs/extras/$tmdbId)"
+touch "/config/extended/logs/extras/$tmdbId"
+chmod 666 "/config/extended/logs/extras/$tmdbId"
 
 # Process item with PlexNotify.bash if plexToken is configured
 if [ ! -z "$plexToken" ]; then
