@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.006"
+scriptVersion="1.0.007"
 arrEventType="$sonarr_eventtype"
 arrItemId=$sonarr_series_id
 tmdbApiKey="3b7751e3179f796565d88fdb2fcdf426"
@@ -197,17 +197,17 @@ chmod 666 "/config/extended/extras/$tmdbId"
 if [ ! -z "$plexToken" ]; then
     # Always update plex if extra is downloaded
     if [ "$updatePlex" == "true" ]; then
-        log "Using PlexNotify.bash to update Plex...."
+        log "$itemTitle :: Using PlexNotify.bash to update Plex...."
         bash /config/extended/scripts/PlexNotify.bash "$itemPath"
         exit
     fi
     
     # Do not notify plex if this script was triggered by the AutoExtras.bash and no Extras were downloaded
     if [ "$autoScan" == "true" ]; then 
-        log "Skipping plex notification, not needed...."
+        log "$itemTitle :: Skipping plex notification, not needed...."
         exit
     else
-        log "Using PlexNotify.bash to update Plex...."
+        log "$itemTitle :: Using PlexNotify.bash to update Plex...."
         bash /config/extended/scripts/PlexNotify.bash "$itemPath"
         exit
     fi
