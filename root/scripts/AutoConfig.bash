@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.1"
+scriptVersion="1.0.2"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -23,8 +23,16 @@ chmod 666 "/config/logs/AutoConfig.txt"
 
 log () {
   m_time=`date "+%F %T"`
-  echo $m_time" :: AutoConfig :: "$1
+  echo $m_time" :: AutoConfig :: $scriptVersion :: "$1
 }
+
+if [ -f /config/extended/logs/autoconfig ]; then
+	log "Sonarr previously configured with optimal settings, skipping..."
+	log "To re-configure Sonarr, delete the following file:"
+	log "/config/extended/logs/autoconfig" 
+	exit
+fi
+
 
 log "Getting Trash Guide Recommended Sonarr Naming..."
 standardNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | head -n 1)"
@@ -113,5 +121,8 @@ else
 	updateArr=$(curl -s "$arrUrl/api/v3/notification?" -X POST -H "Content-Type: application/json" -H "X-Api-Key: ${arrApiKey}" --data-raw '{"onGrab":false,"onDownload":true,"onUpgrade":true,"onRename":true,"onSeriesDelete":false,"onEpisodeFileDelete":false,"onEpisodeFileDeleteForUpgrade":false,"onHealthIssue":false,"onApplicationUpdate":false,"supportsOnGrab":true,"supportsOnDownload":true,"supportsOnUpgrade":true,"supportsOnRename":true,"supportsOnSeriesDelete":false,"supportsOnEpisodeFileDelete":true,"supportsOnEpisodeFileDeleteForUpgrade":true,"supportsOnHealthIssue":true,"supportsOnApplicationUpdate":true,"includeHealthWarnings":false,"name":"Extras.bash","fields":[{"name":"path","value":"/config/extended/scripts/Extras.bash"},{"name":"arguments"}],"implementationName":"Custom Script","implementation":"CustomScript","configContract":"CustomScriptSettings","infoLink":"https://wiki.servarr.com/sonarr/supported#customscript","message":{"message":"Testing will execute the script with the EventType set to Test, ensure your script handles this correctly","type":"warning"},"tags":[]}')
 	log "Complete"
 fi
+
+touch /config/extended/logs/autoconfig
+chmod 666 /config/extended/logs/autoconfig
 
 exit
