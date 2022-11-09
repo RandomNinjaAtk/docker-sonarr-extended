@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.005"
+scriptVersion="1.0.006"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -22,6 +22,10 @@ log () {
 if [ -f "/config/logs/QueueCleaner.txt" ]; then
 	find /config/logs -type f -name "QueueCleaner.txt" -size +1024k -delete
 fi
+
+touch "/config/logs/QueueCleaner.txt"
+chmod 666 "/config/logs/QueueCleaner.txt"
+exec &> >(tee -a "/config/logs/QueueCleaner.txt")
 
 CleanerProcess () {
     arrQueueData="$(curl -s "$arrUrl/api/v3/queue?page=1&pagesize=200&sortDirection=descending&sortKey=progress&includeUnknownSeriesItems=true&apikey=${arrApiKey}" | jq -r .records[])"
