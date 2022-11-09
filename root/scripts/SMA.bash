@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.0"
+scriptVersion="1.0.1"
 arrEventType="$sonarr_eventtype"
 
 # auto-clean up log file to reduce space usage
@@ -21,6 +21,15 @@ if [ "$arrEventType" == "Test" ]; then
 	exit
 fi
 
+NotifyPlex () {
+    # Process item with PlexNotify.bash if plexToken is configured
+    if [ ! -z "$plexToken" ]; then
+        # update plex
+        log "$itemTitle :: Using PlexNotify.bash to update Plex...."
+        bash /config/extended/scripts/PlexNotify.bash "$sonarr_series_path"
+    fi
+}
+
 log "Processing :: $sonarr_episodefile_path"
 if python3 /usr/local/sma/manual.py --config "/config/extended/configs/sma.ini" -i "$sonarr_episodefile_path" -tvdb $sonarr_series_tvdbid -s $sonarr_episodefile_seasonnumber -e $sonarr_episodefile_episodenumbers -a; then
     sleep 0.01
@@ -29,4 +38,7 @@ if python3 /usr/local/sma/manual.py --config "/config/extended/configs/sma.ini" 
 else
     log "ERROR :: SMA Processing Error"
 fi
+
+NotifyPlex
+
 exit
