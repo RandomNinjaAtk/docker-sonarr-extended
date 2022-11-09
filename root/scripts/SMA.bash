@@ -22,7 +22,7 @@ if [ "$arrEventType" == "Test" ]; then
 fi
 
 log "Processing :: $sonarr_episodefile_path"
-if python3 /usr/local/sma/manual.py --config "/config/sma.ini" -i "$sonarr_episodefile_path" -tvdb $sonarr_series_tvdbid -s $sonarr_episodefile_seasonnumber -e $sonarr_episodefile_episodenumbers -a; then
+if python3 /usr/local/sma/manual.py --config "/config/extended/configs/sma.ini" -i "$sonarr_episodefile_path" -tvdb $sonarr_series_tvdbid -s $sonarr_episodefile_seasonnumber -e $sonarr_episodefile_episodenumbers -a; then
     sleep 0.01
     log "COMPLETE!"
     rm  /usr/local/sma/config/*log*
