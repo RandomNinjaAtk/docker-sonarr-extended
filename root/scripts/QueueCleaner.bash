@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.002"
+scriptVersion="1.0.003"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -13,18 +13,19 @@ if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrl="http://127.0.0.1:${arrPort}${arrUrlBase}"
 fi
 
+log () {
+  m_time=`date "+%F %T"`
+  echo $m_time" :: QueueCleaner :: $scriptVersion :: "$1
+}
+
 # auto-clean up log file to reduce space usage
 if [ -f "/config/logs/QueueCleaner.txt" ]; then
 	find /config/logs -type f -name "QueueCleaner.txt" -size +1024k -delete
 fi
 
-exec &>> "/config/logs/QueueCleaner.txt"
+touch "/config/logs/QueueCleaner.txt"
 chmod 666 "/config/logs/QueueCleaner.txt"
-
-log () {
-  m_time=`date "+%F %T"`
-  echo $m_time" :: QueueCleaner :: "$1
-}
+exec &> >(tee -a "/config/logs/QueueCleaner.txt")
 
 arrQueueData="$(curl -s "$arrUrl/api/v3/queue?page=1&pagesize=200&sortDirection=descending&sortKey=progress&includeUnknownSeriesItems=true&apikey=${arrApiKey}" | jq -r .records[])"
 arrQueueIds=$(echo "$arrQueueData" | jq -r 'select(.status=="completed") | select(.trackedDownloadStatus=="warning") | .id')
