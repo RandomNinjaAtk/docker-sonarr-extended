@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.000"
+scriptVersion="1.0.001"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -13,18 +13,19 @@ if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrl="http://127.0.0.1:${arrPort}${arrUrlBase}"
 fi
 
+log () {
+  m_time=`date "+%F %T"`
+  echo $m_time" :: Recycalarr :: $scriptVersion :: "$1
+}
+
 # auto-clean up log file to reduce space usage
 if [ -f "/config/logs/Recyclarr.txt" ]; then
 	find /config/logs -type f -name "Recyclarr.txt" -size +1024k -delete
 fi
 
-exec &>> "/config/logs/Recyclarr.txt"
+touch "/config/logs/Recyclarr.txt"
 chmod 666 "/config/logs/Recyclarr.txt"
-
-log () {
-  m_time=`date "+%F %T"`
-  echo $m_time" :: Recycalarr :: "$1
-}
+exec &> >(tee -a "/config/logs/Recyclarr.txt")
 
 # Configure Yaml with URL and API Key
 sed -i "s%arrUrl%$arrUrl%g" "/recyclarr.yaml"
