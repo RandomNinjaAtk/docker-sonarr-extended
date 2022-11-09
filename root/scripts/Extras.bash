@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.009"
+scriptVersion="1.0.010"
 arrEventType="$sonarr_eventtype"
 arrItemId=$sonarr_series_id
 tmdbApiKey="3b7751e3179f796565d88fdb2fcdf426"
@@ -32,7 +32,7 @@ fi
 
 log () {
   m_time=`date "+%F %T"`
-  echo $m_time" :: Extras :: "$1
+  echo $m_time" :: Extras :: $scriptVersion :: "$1
 }
 
 # auto-clean up log file to reduce space usage
@@ -40,13 +40,15 @@ if [ -f "/config/logs/Extras.txt" ]; then
 	find /config/logs -type f -name "Extras.txt" -size +1024k -delete
 fi
 
+touch "/config/logs/Extras.txt"
+chmod 666 "/config/logs/Extras.txt"
+exec &> >(tee -a "/config/logs/Extras.txt")
+
 if [ "$arrEventType" == "Test" ]; then
 	log "Tested Successfully"
 	exit 0	
 fi
 
-exec &>> "/config/logs/Extras.txt"
-chmod 666 "/config/logs/Extras.txt"
 
 # Check to see if Extras are enabled via ENV
 if [ "$enableExtras" != "true" ]; then
