@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.003"
+scriptVersion="1.0.004"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -13,18 +13,19 @@ if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrl="http://127.0.0.1:${arrPort}${arrUrlBase}"
 fi
 
+log () {
+  m_time=`date "+%F %T"`
+  echo $m_time" :: InvalidSeriesAutoCleaner :: $scriptVersion :: "$1
+}
+
 # auto-clean up log file to reduce space usage
 if [ -f "/config/logs/SeriesAutoDelete.txt" ]; then
 	find /config/logs -type f -name "InvalidSeriesAutoCleaner.txt" -size +1024k -delete
 fi
 
-exec &>> "/config/logs/InvalidSeriesAutoCleaner.txt"
+touch "/config/logs/InvalidSeriesAutoCleaner.txt"
 chmod 666 "/config/logs/InvalidSeriesAutoCleaner.txt"
-
-log () {
-  m_time=`date "+%F %T"`
-  echo $m_time" :: InvalidSeriesAutoCleaner :: "$1
-}
+exec &> >(tee -a "/config/logs/InvalidSeriesAutoCleaner.txt")
 
 # Get invalid series tvdb id's
 seriesTvdbId="$(curl -s --header "X-Api-Key:"$arrApiKey --request GET  "$arrUrl/api/v3/health" | jq -r '.[] | select(.source=="RemovedSeriesCheck") | select(.type=="error")' | grep "message" | grep -o '[[:digit:]]*')"
