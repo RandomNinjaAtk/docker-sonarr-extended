@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.000"
+scriptVersion="1.0.001"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -13,18 +13,19 @@ if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrl="http://127.0.0.1:${arrPort}${arrUrlBase}"
 fi
 
+log () {
+  m_time=`date "+%F %T"`
+  echo $m_time" :: DailySeriesEpisodeTrimmer :: $scriptVersion :: "$1
+}
+
 # auto-clean up log file to reduce space usage
 if [ -f "/config/logs/DailySeriesEpisodeTrimmer.txt" ]; then
 	find /config/logs -type f -name "DailySeriesEpisodeTrimmer.txt" -size +1024k -delete
 fi
 
-log () {
-  m_time=`date "+%F %T"`
-  echo $m_time" :: DailySeriesEpisodeTrimmer :: "$1
-}
-
-exec &>> "/config/logs/DailySeriesEpisodeTrimmer.txt"
+touch "/config/logs/DailySeriesEpisodeTrimmer.txt"
 chmod 666 "/config/logs/DailySeriesEpisodeTrimmer.txt"
+exec &> >(tee -a "/config/logs/DailySeriesEpisodeTrimmer.txt")
 
 if [ "$sonarr_eventtype" == "Test" ]; then
 	log "Tested"
