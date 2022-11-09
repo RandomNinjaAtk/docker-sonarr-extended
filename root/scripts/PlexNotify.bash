@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-version="1.0.002"
+scriptVersion="1.0.003"
 notfidedBy="Sonarr"
 arrRootFolderPath="$(dirname "$sonarr_series_path")"
 arrFolderPath="$sonarr_series_path"
@@ -9,18 +9,19 @@ extrasPath="$1"
 # Debugging Settings
 #enableExtras=false
 
+log () {
+    m_time=`date "+%F %T"`
+    echo $m_time" :: PlexNotify :: $scriptVersion :: "$1
+}
+
 # auto-clean up log file to reduce space usage
 if [ -f "/config/logs/PlexNotify.txt" ]; then
 	find /config/logs -type f -name "PlexNotify.txt" -size +1024k -delete
 fi
 
-exec &>> "/config/logs/PlexNotify.txt"
+touch "/config/logs/PlexNotify.txt"
 chmod 666 "/config/logs/PlexNotify.txt"
-
-log () {
-    m_time=`date "+%F %T"`
-    echo $m_time" :: PlexNotify :: "$1
-}
+exec &> >(tee -a "/config/logs/PlexNotify.txt")
 
 if [ "$enableExtras" == "true" ]; then
     if [ -z "$extrasPath" ]; then
