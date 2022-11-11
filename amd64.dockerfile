@@ -8,6 +8,7 @@ ENV videoFormat="bestvideo*+bestaudio/best"
 
 RUN \
 	echo "************ install packages ************" && \
+	apt-get update && \
 	apt-get install -y \
 		git \
 		wget \
