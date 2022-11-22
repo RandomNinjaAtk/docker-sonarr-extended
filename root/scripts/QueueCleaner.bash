@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.007"
+scriptVersion="1.0.008"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -34,22 +34,22 @@ CleanerProcess () {
   if [ $arrQueueIdsCount -eq 0 ]; then
     log "No items in queue to clean up..."
   else
-	  for queueId in $(echo $arrQueueIds); do
-      arrQueueItemData="$(echo "$arrQueueData" | jq -r "select(.id==$queueId)")"
-      arrQueueItemTitle="$(echo "$arrQueueItemData" | jq -r .title)"
-      arrEpisodeId="$(echo "$arrQueueItemData" | jq -r .episodeId)"
-      arrEpisodeData="$(curl -s "$arrUrl/api/v3/episode/$arrEpisodeId?apikey=${arrApiKey}")"
-      arrEpisodeTitle="$(echo "$arrEpisodeData" | jq -r .title)"
-      arrEpisodeSeriesId="$(echo "$arrEpisodeData" | jq -r .seriesId)"
-      if [ "$arrEpisodeTitle" == "TBA" ]; then
-        log "ERROR :: Episode title is \"$arrEpisodeTitle\" and prevents auto-import, refreshing series..."
-        refreshSeries=$(curl -s "$arrUrl/api/v3/command" -X POST -H 'Content-Type: application/json' -H "X-Api-Key: $arrApiKey" --data-raw "{\"name\":\"RefreshSeries\",\"seriesId\":$arrEpisodeSeriesId}")
-        continue
-      else
-        log "Removing Failed Queue Item ID: $queueId ($arrQueueItemTitle) from Sonarr..."
-        curl -sX DELETE "$arrUrl/api/v3/queue/$queueId?removeFromClient=true&blocklist=true&apikey=${arrApiKey}"
-      fi
-	  done
+  	for queueId in $(echo $arrQueueIds); do
+	      arrQueueItemData="$(echo "$arrQueueData" | jq -r "select(.id==$queueId)")"
+	      arrQueueItemTitle="$(echo "$arrQueueItemData" | jq -r .title)"
+	      arrEpisodeId="$(echo "$arrQueueItemData" | jq -r .episodeId)"
+	      arrEpisodeData="$(curl -s "$arrUrl/api/v3/episode/$arrEpisodeId?apikey=${arrApiKey}")"
+	      arrEpisodeTitle="$(echo "$arrEpisodeData" | jq -r .title)"
+	      arrEpisodeSeriesId="$(echo "$arrEpisodeData" | jq -r .seriesId)"
+	      if [ "$arrEpisodeTitle" == "TBA" ]; then
+	      	log "ERROR :: Episode title is \"$arrEpisodeTitle\" and prevents auto-import, refreshing series..."
+		refreshSeries=$(curl -s "$arrUrl/api/v3/command" -X POST -H 'Content-Type: application/json' -H "X-Api-Key: $arrApiKey" --data-raw "{\"name\":\"RefreshSeries\",\"seriesId\":$arrEpisodeSeriesId}")
+		continue
+	      else
+		log "Removing Failed Queue Item ID: $queueId ($arrQueueItemTitle) from Sonarr..."
+		deleteItem=$(curl -sX DELETE "$arrUrl/api/v3/queue/$queueId?removeFromClient=true&blocklist=true&apikey=${arrApiKey}")
+	      fi
+	done
   fi
 }
 
