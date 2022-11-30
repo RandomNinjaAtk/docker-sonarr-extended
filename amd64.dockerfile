@@ -8,21 +8,23 @@ ENV videoFormat="bestvideo*+bestaudio/best"
 
 RUN \
 	echo "************ install packages ************" && \
-	apt-get update && \
-	apt-get install -y \
+	apk add -U --update --no-cache \
+		flac \
+		opus-tools \
+		jq \
 		git \
 		wget \
-		python3 \
-		python3-pip \
-		ffmpeg \
 		mkvtoolnix \
-		zip \
-		unzip \
-		tidy && \
-	echo "************ install python packages ************" && \
-	python3 -m pip install --no-cache-dir -U \
-		yq \
+		python3-dev \
+		libc-dev \
+		py3-pip \
+		gcc \
+		ffmpeg \
 		yt-dlp && \
+	echo "************ install python packages ************" && \
+	pip install --upgrade --no-cache-dir -U \
+		excludarr \
+		yq && \
 	echo "************ setup SMA ************" && \
 	echo "************ setup directory ************" && \
 	mkdir -p ${SMA_PATH} && \
@@ -36,11 +38,11 @@ RUN \
 	chmod g+w ${SMA_PATH}/config/sma.log && \
 	echo "************ install pip dependencies ************" && \
 	python3 -m pip install --user --upgrade pip && \	
-	pip3 install -r ${SMA_PATH}/setup/requirements.txt && \
+ 	pip3 install -r ${SMA_PATH}/setup/requirements.txt && \
 	echo "************ install recyclarr ************" && \
 	mkdir -p /recyclarr && \
-	wget "https://github.com/recyclarr/recyclarr/releases/latest/download/recyclarr-linux-x64.zip" -O "/recyclarr/recyclarr.zip" && \
-	unzip -o /recyclarr/recyclarr.zip -d /recyclarr && \
+	wget "https://github.com/recyclarr/recyclarr/releases/latest/download/recyclarr-linux-musl-x64.zip" -O "/recyclarr/recyclarr.zip" && \
+	unzip -o /recyclarr/recyclarr.zip -d /recyclarr &>/dev/null && \
 	chmod 777 /recyclarr/recyclarr
 	
 WORKDIR /config
