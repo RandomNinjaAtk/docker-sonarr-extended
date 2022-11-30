@@ -141,7 +141,6 @@ sonarr:
           - 6d0d8de7b57e35518ac0308b0ddf404e # DV
           - 3bc5f395426614e155e585a2f056cdf1 # Season Pack
           - 82d40da2bc6923f41e14394075dd4b03 # No-RlsGroup
-          - 9b64dff695c2115facf1b6ea59c9bd07 # x265 (no HDR/DV)
           - 3a4127d8aa781b44120d907f2cd62627 # Hybrid
           - b735f09d3c025cbb7d75a5d38325b73b # Remaster
           - 32b367365729d530ca1c124a0b180c64 # Bad Dual Groups
