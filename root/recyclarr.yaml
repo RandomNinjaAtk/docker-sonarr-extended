@@ -21,7 +21,7 @@ sonarr:
     delete_old_custom_formats: true
 
      custom_formats:
-      # A list of custom formats to sync to Radarr. Must match the "trash_id" in the guide JSON.
+      # A list of custom formats to sync to Sonarr. Must match the "trash_id" in the guide JSON.
       - trash_ids:
           - 290078c8b266272a5cc8e251b5e2eb0b # 1080p
           - 1bef6c151fa35093015b0bfef18279e5 # 2160p
