@@ -121,6 +121,7 @@ sonarr:
           - c429417a57ea8c41d57e6990a8b0033f # DTS-HD MA
           - 9d00418ba386a083fbf4d58235fc37ef # DTS X
           - 5964f2a8b3be407d083498e4459d05d0 # DTS
+          - cfa5fbd8f02a86fc55d8d223d06a5e1f # DTS-HD HRA
           - 0d7824bb924701997f874e7ff7d4844a # TrueHD ATMOS
           - 1808e4b9cee74e064dfae3f1db99dbfe # TrueHD
           - b6fbafa7942952a13e17e2b1152b539a # ATMOS (undefined)
