@@ -11,8 +11,8 @@
 
 # Configuration specific to Sonarr
 sonarr:
-  # Set the URL/API Key to your actual instance
-  - base_url: arrUrl
+  instance1:
+    base_url: arrUrl
     api_key: arrApi
 
     # Quality definitions from the guide to sync to Sonarr. Choice: anime, series, hybrid
