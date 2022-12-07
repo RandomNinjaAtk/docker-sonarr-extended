@@ -1,3 +1,4 @@
+FROM mcr.microsoft.com/dotnet/runtime:7.0-alpine
 FROM linuxserver/sonarr:develop
 LABEL maintainer="RandomNinjaAtk"
 
