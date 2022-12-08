@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.3"
+scriptVersion="1.0.4"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -36,16 +36,16 @@ fi
 
 
 log "Getting Trash Guide Recommended Sonarr Naming..."
-standardNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | head -n 1)"
-dailyNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | grep "{Air-Date}")"
-animeNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | grep "{absolute")"
-seriesNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | head -n4 | tail -n1)"
+standardNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | sed -n 2p | sed 's/^ *//')"
+dailyNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | grep "{Air-Date}"  | sed -n 2p | sed 's/^ *//')"
+animeNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | grep "{absolute" | sed -n 2p | sed 's/^ *//')"
+seriesNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | head -n7 | tail -n1)"
 
 log "Updating Sonarr File Naming..."
 updateArr=$(curl -s "$arrUrl/api/v3/config/naming" -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $arrApiKey" --data-raw "{
 	\"renameEpisodes\":true,
 	\"replaceIllegalCharacters\":true,
-	\"multiEpisodeStyle\":4,
+	\"multiEpisodeStyle\":5,
 	\"standardEpisodeFormat\":\"$standardNaming\",
 	\"dailyEpisodeFormat\":\"$dailyNaming\",
 	\"animeEpisodeFormat\":\"$animeNaming\",
