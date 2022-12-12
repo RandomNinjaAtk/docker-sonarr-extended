@@ -16,7 +16,9 @@ sonarr:
     api_key: arrApi
 
     # Quality definitions from the guide to sync to Sonarr. Choice: anime, series, hybrid
-    quality_definition: series
+    quality_definition:
+      type: series
+      preferred_ratio: 1.0
 
     delete_old_custom_formats: true
 
@@ -50,21 +52,20 @@ sonarr:
           - name: Any
             score: 300
       - trash_ids:
+          - 290078c8b266272a5cc8e251b5e2eb0b # 1080p
+        quality_profiles:
+          - name: Any
+            score: 100
+      - trash_ids:
           - 4232a509ce60c4e208d13825b7c06264 # DD+ ATMOS
           - a377864de6228b252d6e28962673cedd # 9.1 Surround
           - 204c8c3e7315bb0ea81332774fa888d6 # 7.1 Surround
-          - 290078c8b266272a5cc8e251b5e2eb0b # 1080p
-          - 3e2c4e748b64a1a1118e0ea3f4cf6875 # HDR
-          - 3497799d29a085e2ac2df9d468413c94 # HDR10
-          - a3d82cbef5039f8d295478d28a887159 # HDR10+
-          - 0dad0a507451acddd754fe6dc3a7f5e7 # HDR10+ Boost
-          - 2a7e3be05d3861d6df7171ec74cad727 # PQ
           - 026d5aadd1a6b4e550b134cb6c72b3ca # Uncensored
+          - 2016d1676f5ee13a5b7257ff86ac9a93 # SDR
         quality_profiles:
           - name: Any
             score: 75
       - trash_ids:
-          - 1bef6c151fa35093015b0bfef18279e5 # 2160p
           - 3fbafa924f361e66fbc6187af82dfa85 # 5.1 Surround
           - 9fb6d778592c293467437593ef394bf1 # 6.1 Surround
         quality_profiles:
@@ -79,6 +80,7 @@ sonarr:
           - name: Any
             score: 25
       - trash_ids:
+          - 1bef6c151fa35093015b0bfef18279e5 # 2160p
           - dbe00161b08a25ac6154c55f95e6318d # DD
           - bd6dd5e043aa27ff4696a08d011c7d96 # 1.0 Mono
         quality_profiles:
@@ -105,15 +107,16 @@ sonarr:
           - 851bd64e04c9374c51102be3dd9ae4cc # FLAC
           - 3e8b714263b26f486972ee1e0fe7606c # MP3
           - 30f70576671ca933adbdcfc736a69718 # PCM
-          - 2016d1676f5ee13a5b7257ff86ac9a93 # SDR
           - b2550eb333d27b75833e25b8c2557b38 # 10bit
           - 418f50b10f1907201b6cfdf881f467b7 # Anime Dual Audio
           - 9c14d194486c4014d422adc64092d794 # Dubs Only
+          - 5964f2a8b3be407d083498e4459d05d0 # DTS
         quality_profiles:
           - name: Any
             score: 0
       - trash_ids:
           - 7ba05c6e0e14e793538174c679126996 # Multi
+          - 47435ece6b99a0b477caf360e79ba0bb # x265 (HD)
         quality_profiles:
           - name: Any
             score: -250
@@ -121,7 +124,6 @@ sonarr:
           - c1a25cd67b5d2e08287c957b1eb903ec # DTS-ES
           - c429417a57ea8c41d57e6990a8b0033f # DTS-HD MA
           - 9d00418ba386a083fbf4d58235fc37ef # DTS X
-          - 5964f2a8b3be407d083498e4459d05d0 # DTS
           - cfa5fbd8f02a86fc55d8d223d06a5e1f # DTS-HD HRA
           - 0d7824bb924701997f874e7ff7d4844a # TrueHD ATMOS
           - 1808e4b9cee74e064dfae3f1db99dbfe # TrueHD
@@ -139,6 +141,11 @@ sonarr:
           - 1f733af03141f068a540eec352589a89 # DV HLG
           - 27954b0a80aab882522a88a4d9eae1cd # DV SDR
           - 6d0d8de7b57e35518ac0308b0ddf404e # DV
+          - 3e2c4e748b64a1a1118e0ea3f4cf6875 # HDR
+          - 3497799d29a085e2ac2df9d468413c94 # HDR10
+          - a3d82cbef5039f8d295478d28a887159 # HDR10+
+          - 0dad0a507451acddd754fe6dc3a7f5e7 # HDR10+ Boost
+          - 2a7e3be05d3861d6df7171ec74cad727 # PQ
           - 3bc5f395426614e155e585a2f056cdf1 # Season Pack
           - 82d40da2bc6923f41e14394075dd4b03 # No-RlsGroup
           - 3a4127d8aa781b44120d907f2cd62627 # Hybrid
