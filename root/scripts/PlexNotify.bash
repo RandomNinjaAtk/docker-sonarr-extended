@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.003"
+scriptVersion="1.0.004"
 notfidedBy="Sonarr"
 arrRootFolderPath="$(dirname "$sonarr_series_path")"
 arrFolderPath="$sonarr_series_path"
@@ -20,7 +20,6 @@ if [ -f "/config/logs/PlexNotify.txt" ]; then
 fi
 
 touch "/config/logs/PlexNotify.txt"
-chmod 666 "/config/logs/PlexNotify.txt"
 exec &> >(tee -a "/config/logs/PlexNotify.txt")
 
 if [ "$enableExtras" == "true" ]; then
