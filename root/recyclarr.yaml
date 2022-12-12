@@ -16,7 +16,9 @@ sonarr:
     api_key: arrApi
 
     # Quality definitions from the guide to sync to Sonarr. Choice: anime, series, hybrid
-    quality_definition: series
+    quality_definition:
+      type: series
+      preferred_ratio: 1.0
 
     delete_old_custom_formats: true
 
