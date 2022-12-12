@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.001"
+scriptVersion="1.0.002"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -24,7 +24,6 @@ if [ -f "/config/logs/DailySeriesEpisodeTrimmer.txt" ]; then
 fi
 
 touch "/config/logs/DailySeriesEpisodeTrimmer.txt"
-chmod 666 "/config/logs/DailySeriesEpisodeTrimmer.txt"
 exec &> >(tee -a "/config/logs/DailySeriesEpisodeTrimmer.txt")
 
 if [ "$sonarr_eventtype" == "Test" ]; then
