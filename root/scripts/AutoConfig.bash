@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.5"
+scriptVersion="1.0.6"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -39,7 +39,7 @@ if [ -f /config/extended/configs/naming.json ]; then
 	log "Using custom Sonarr Naming (/config/extended/configs/naming.json)..."
 	namingJson=$(cat /config/extended/configs/naming.json)
 else
-	log "Getting Trash Guide Recommended Sonarr Naming..."
+	log "Getting Trash Guide Recommended Naming..."
 	namingJson=$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/json/sonarr/naming/sonarr-naming.json")
 fi
 
