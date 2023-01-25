@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.4"
+scriptVersion="1.0.5"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -35,11 +35,19 @@ if [ -f /config/extended/logs/autoconfig ]; then
 fi
 
 
-log "Getting Trash Guide Recommended Sonarr Naming..."
-standardNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | sed -n 2p | sed 's/^ *//')"
-dailyNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | grep "{Air-Date}"  | sed -n 2p | sed 's/^ *//')"
-animeNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | grep "{absolute" | sed -n 2p | sed 's/^ *//')"
-seriesNaming="$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/Sonarr/Sonarr-recommended-naming-scheme.md" | grep "{Series" | head -n7 | tail -n1)"
+if [ -f /config/extended/configs/naming.json ]; then
+	log "Using custom Sonarr Naming (/config/extended/configs/naming.json)..."
+	namingJson=$(cat /config/extended/configs/naming.json)
+else
+	log "Getting Trash Guide Recommended Sonarr Naming..."
+	namingJson=$(curl -s "https://raw.githubusercontent.com/TRaSH-/Guides/master/docs/json/sonarr/naming/sonarr-naming.json")
+fi
+
+standardNaming=$(echo "$namingJson" | jq -r '.episodes.standard."default:4"')
+dailyNaming=$(echo "$namingJson" | jq -r '.episodes.daily."default:4"')
+animeNaming=$(echo "$namingJson" | jq -r '.episodes.anime."default:4"')
+seriesNaming=$(echo "$namingJson" | jq -r '.series.default')
+seasonNaming=$(echo "$namingJson" | jq -r '.season.default')
 
 log "Updating Sonarr File Naming..."
 updateArr=$(curl -s "$arrUrl/api/v3/config/naming" -X PUT -H "Content-Type: application/json" -H "X-Api-Key: $arrApiKey" --data-raw "{
@@ -50,8 +58,8 @@ updateArr=$(curl -s "$arrUrl/api/v3/config/naming" -X PUT -H "Content-Type: appl
 	\"dailyEpisodeFormat\":\"$dailyNaming\",
 	\"animeEpisodeFormat\":\"$animeNaming\",
 	\"seriesFolderFormat\":\"$seriesNaming\",
-	\"seasonFolderFormat\":\"Season {season:00}\",
-	\"specialsFolderFormat\":\"Season {season:00}\",
+	\"seasonFolderFormat\":\"$seasonNaming\",
+	\"specialsFolderFormat\":\"$seasonNaming\",
 	\"includeSeriesTitle\":false,
 	\"includeEpisodeTitle\":false,
 	\"includeQuality\":false,
