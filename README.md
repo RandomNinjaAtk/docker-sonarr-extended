@@ -43,6 +43,8 @@ This containers base image is provided by: [linuxserver/sonarr](https://github.c
   * Reduce Plex scanning by notifying Plex the exact folder to scan
 * Queue Cleaner Script
   * Automatically removes downloads that have a "warning" or "failed" status that will not auto-import into Sonarr, which enables Sonarr to automatically re-search for the Title
+* Youtube Series Downloader Script
+  * Automatically downloads and imports episodes from Youtube.com for Sonarr series that have their network set as "Youtube"
 
 ### Plex Example
 ![](https://raw.githubusercontent.com/RandomNinjaAtk/docker-amtd/master/.github/amvtd-plex-example.jpg)
@@ -75,6 +77,7 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e enableAutoConfig=true` | true = enabled :: Enables AutoConfig script to run after startup |
 | `-e enableRecyclarr=true` | true = enabled :: Enables Recyclarr to run every 4 hours |
 | `-e enableQueueCleaner=true` | true = enabled :: Enables QueueCleaner Script that automatically removes stuck downloads that cannot be automatically imported on a 15 minute interval |
+| `-e enableYoutubeSeriesDownloader=true` | true = enabled :: Enables Youtube-Series-Downloadder script to run every hour |
 | `-e enableExtras=true` | true = enabled :: Enables Extras script to run during download import process |
 | `-e extrasType=all` | all or trailers :: all downloads all available videos (trailers, clips, featurette, etc...) :: trailers only downloads trailers |
 | `-e extrasLanguages=en-US,it-IT` | Set the desired language for Extras, all languages will be processed... (this is a "," separated list of TMDB language codes, get the code from there sites language opitons, example: en-US) |
@@ -104,6 +107,7 @@ docker create \
   -e enableAutoConfig=true \
   -e enableRecyclarr=true \
   -e enableQueueCleaner=true \
+  -e enableYoutubeSeriesDownloader=true \
   -e enableExtras=true \
   -e extrasType=all \
   -e extrasLanguages=en-US,it-IT \
@@ -133,6 +137,7 @@ services:
       - enableAutoConfig=true
       - enableRecyclarr=true
       - enableQueueCleaner=true
+      - enableYoutubeSeriesDownloader=true
       - enableExtras=true
       - extrasType=all
       - extrasLanguages=en-US,it-IT
