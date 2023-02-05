@@ -11,8 +11,8 @@ echo "Starting Script...."
 for (( ; ; )); do
 	let i++
 	bash /config/extended/scripts/Youtube-Series-Downloader.bash
-	echo "Script sleeping for 4 hours..."
-	sleep 4h
+	echo "Script sleeping for 1 hours..."
+	sleep 1h
 done
 
 exit $?
