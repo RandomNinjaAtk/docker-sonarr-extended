@@ -25,6 +25,13 @@ For more details, visit the [Wiki](https://github.com/RandomNinjaAtk/docker-sona
 
 This containers base image is provided by: [linuxserver/sonarr](https://github.com/linuxserver/docker-sonarr)
 
+### All Arr-Extended Apps:
+* [sabnzbd-extended](https://github.com/RandomNinjaAtk/docker-sabnzbd-extended)
+* [lidarr-extended](https://github.com/RandomNinjaAtk/docker-lidarr-extended)
+* [radarr-extended](https://github.com/RandomNinjaAtk/docker-radarr-extended)
+* [sonarr-extended](https://github.com/RandomNinjaAtk/docker-sonarr-extended)
+* [readarr-extended](https://github.com/RandomNinjaAtk/docker-readarr-extended)
+
 ## Features
 * [Downloading TV **Trailers** and **Extras** using online sources for use in popular applications (Plex):](https://github.com/RandomNinjaAtk/docker-sonarr-extended/wiki/Extras.bash) 
   * Connects to Sonarr to automatically download trailers for TV Series in your existing library
