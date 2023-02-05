@@ -1,0 +1,18 @@
+#!/usr/bin/with-contenv bash
+if [ "$enableYoutubeSeriesDownloader" != "true" ]; then
+	echo "Youtube-Series-Downloader disabled, enable by setting parameter: enableYoutubeSeriesDownloader=true"
+	sleep infinity
+else
+	echo "Waiting for Sonarr to startup..."
+	sleep 2m
+fi
+
+echo "Starting Script...."
+for (( ; ; )); do
+	let i++
+	bash /config/extended/scripts/Youtube-Series-Downloader.bash
+	echo "Script sleeping for 4 hours..."
+	sleep 4h
+done
+
+exit $?
