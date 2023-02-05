@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.1"
+scriptVersion="1.0.2"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -90,12 +90,16 @@ for id in $(echo $sonarrSeriesIds); do
         seriesEpisdodeData=$(echo $seriesEpisodeData | jq -r ".[] | select(.tvdbId==$episodeId)")
         episodeSeasonNumber=$(echo $seriesEpisdodeData | jq -r .seasonNumber)
         episodeNumber=$(echo $seriesEpisdodeData | jq -r .episodeNumber)
-        downloadUrl=$(curl -s "https://thetvdb.com/series/$seriesTvdbTitleSlug/episodes/$episodeId" | grep -i youtube.com  | grep -i watch | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
+        tvdbPageData=$(curl -s "https://thetvdb.com/series/$seriesTvdbTitleSlug/episodes/$episodeId")
+        downloadUrl=$(echo "$tvdbPageData" | grep -i youtube.com  | grep -i watch | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
         
         if [ -z $downloadUrl ]; then
-            downloadUrl=$(curl -s "https://thetvdb.com/series/$seriesTvdbTitleSlug/episodes/$episodeId" | grep -iwns "production code" -A 2 | sed 's/\ //g' | cut -d "-" -f2 | tail -n1)
-            if [ ! -z $downloadUrl ]; then
-                downloadUrl="https://www.youtube.com/watch?v=$downloadUrl"
+            network="$(echo "$tvdbPageData" | grep -i "/companies/youtube")"
+            if [ ! -z "$network" ]; then 
+                downloadUrl=$(echo "$tvdbPageData" | grep -iwns "production code" -A 2 | sed 's/\ //g' | cut -d "-" -f2 | tail -n1)
+                if [ ! -z $downloadUrl ]; then
+                    downloadUrl="https://www.youtube.com/watch?v=$downloadUrl"
+                fi
             fi
         fi
 
