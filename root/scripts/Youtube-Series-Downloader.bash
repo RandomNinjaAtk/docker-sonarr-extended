@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.0"
+scriptVersion="1.0.1"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -46,6 +46,24 @@ NotifySonarrForImport () {
     sonarrProcessIt=$(curl -s "$arrUrl/api/v3/command" --header "X-Api-Key:"${arrApiKey} -H "Content-Type: application/json" --data "{\"name\":\"DownloadedEpisodesScan\", \"path\":\"$1\"}")
 }
 
+SonarrTaskStatusCheck () {
+	alerted=no
+	until false
+	do
+		taskCount=$(curl -s "$arrUrl/api/v3/command?apikey=${arrApiKey}" | jq -r '.[] | select(.status=="started") | .name' | grep -v "RescanFolders" | wc -l)
+		if [ "$taskCount" -ge "1" ]; then
+			if [ "$alerted" == "no" ]; then
+				alerted=yes
+				log "STATUS :: SONARR BUSY :: Pausing/waiting for all active Sonarr tasks to end..."
+			fi
+			sleep 2
+		else
+			break
+		fi
+	done
+}
+
+
 CookiesCheck
 
 sonarrSeriesList=$(curl -s --header "X-Api-Key:"${arrApiKey} --request GET  "$arrUrl/api/v3/series")
@@ -74,6 +92,13 @@ for id in $(echo $sonarrSeriesIds); do
         episodeNumber=$(echo $seriesEpisdodeData | jq -r .episodeNumber)
         downloadUrl=$(curl -s "https://thetvdb.com/series/$seriesTvdbTitleSlug/episodes/$episodeId" | grep -i youtube.com  | grep -i watch | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
         
+        if [ -z $downloadUrl ]; then
+            downloadUrl=$(curl -s "https://thetvdb.com/series/$seriesTvdbTitleSlug/episodes/$episodeId" | grep -iwns "production code" -A 2 | sed 's/\ //g' | cut -d "-" -f2 | tail -n1)
+            if [ ! -z $downloadUrl ]; then
+                downloadUrl="https://www.youtube.com/watch?v=$downloadUrl"
+            fi
+        fi
+
         if [ -z $downloadUrl ]; then
             log "$loopCount/$sonarrSeriesTotal :: $currentLoopIteration/$seriesEpisodeTvdbIdsCount :: $seriesTitle :: S${episodeSeasonNumber}E${episodeNumber} :: ERROR :: No Download URL found, skipping"
             continue
@@ -107,6 +132,7 @@ for id in $(echo $sonarrSeriesIds); do
             NotifySonarrForImport "$downloadLocation/$fileName.mkv"
             log "$loopCount/$sonarrSeriesTotal :: $currentLoopIteration/$seriesEpisodeTvdbIdsCount :: $seriesTitle :: S${episodeSeasonNumber}E${episodeNumber} :: Notified Sonarr to import \"$fileName.mkv\"" 
         fi
+        SonarrTaskStatusCheck
     done
 done
 exit
