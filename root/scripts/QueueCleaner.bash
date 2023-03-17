@@ -29,8 +29,8 @@ exec &> >(tee -a "/config/logs/QueueCleaner.txt")
 
 CleanerProcess () {
   arrQueueData="$(curl -s "$arrUrl/api/v3/queue?page=1&pagesize=200&sortDirection=descending&sortKey=progress&includeUnknownSeriesItems=true&apikey=${arrApiKey}" | jq -r .records[])"
-  arrQueueCompletedIds=$(echo "$arrQueueData" | jq -r 'select(.status=="completed") | select(.trackedDownloadStatus=="warning") | .id')
-  arrQueueIdsCompletedCount=$(echo "$arrQueueData" | jq -r 'select(.status=="completed") | select(.trackedDownloadStatus=="warning") | .id' | wc -l)
+  arrQueueCompletedIds=$(echo "$arrQueueData" | jq -r 'select(.status=="warning") | .id')
+  arrQueueIdsCompletedCount=$(echo "$arrQueueData" | jq -r 'select(.status=="warning") | .id' | wc -l)
   arrQueueFailedIds=$(echo "$arrQueueData" | jq -r 'select(.status=="failed") | .id')
   arrQueueIdsFailedCount=$(echo "$arrQueueData" | jq -r 'select(.status=="failed") | .id' | wc -l)
   arrQueuedIds=$(echo "$arrQueueCompletedIds"; echo "$arrQueueFailedIds")
