@@ -37,20 +37,19 @@ if [ ! -f "/config/extended/configs/sma.ini" ]; then
 	cp /sma.ini "/config/extended/configs/sma.ini"
 fi
 
+echo "Setting up scripts..."
+if [  -f "/config/extended/scripts/QueueCleaner.bash" ]; then
+	echo "Removing old script, QueueCleaner.bash"
+	rm "/config/extended/scripts/QueueCleaner.bash"
+fi
+echo "Downloading and setting up QueueCleaner.bash"
+curl "https://raw.githubusercontent.com/RandomNinjaAtk/arr-scripts/main/QueueCleaner.bash" -o "/config/extended/scripts/QueueCleaner.bash"
+chmod 777 "/config/extended/scripts/QueueCleaner.bash"
+
 # set permissions
 chmod 777 -R /usr/local/sma
 find /config/extended -type d -exec chmod 777 {} \;
 find /config/extended -type f -exec chmod 666 {} \;
 chmod -R 777 /config/extended/scripts
-
-
-echo "Setting up scripts..."
-if [  -f "/etc/services.d/QueueCleaner.bash" ]; then
-	echo "Removing old script, QueueCleaner.bash"
-	rm "/etc/services.d/QueueCleaner.bash"
-fi
-echo "Downloading and setting up QueueCleaner.bash"
-curl "https://raw.githubusercontent.com/RandomNinjaAtk/arr-scripts/main/QueueCleaner.bash" -o "/etc/services.d/QueueCleaner.bash"
-chmod 777 "/etc/services.d/QueueCleaner.bash"
 echo "Complete..."
 exit
