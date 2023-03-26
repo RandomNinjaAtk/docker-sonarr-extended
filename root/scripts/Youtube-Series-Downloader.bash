@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.2"
+scriptVersion="1.0.3"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -23,7 +23,10 @@ if [ -f "/config/logs/Youtube-Series-Downloader.txt" ]; then
 	find /config/logs -type f -name "Youtube-Series-Downloader.txt" -size +1024k -delete
 fi
 
-touch "/config/logs/Youtube-Series-Downloader.txt"
+if [ ! -f "/config/logs/Youtube-Series-Downloader.txt" ]; then
+    touch "/config/logs/Youtube-Series-Downloader.txt"
+    chmod 666 "/config/logs/Youtube-Series-Downloader.txt"
+fi
 exec &> >(tee -a "/config/logs/Youtube-Series-Downloader.txt")
 
 if [ "$arrEventType" == "Test" ]; then
