@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.012"
+scriptVersion="1.0.1"
 arrEventType="$sonarr_eventtype"
 arrItemId=$sonarr_series_id
 tmdbApiKey="3b7751e3179f796565d88fdb2fcdf426"
@@ -40,7 +40,10 @@ if [ -f "/config/logs/Extras.txt" ]; then
 	find /config/logs -type f -name "Extras.txt" -size +1024k -delete
 fi
 
-touch "/config/logs/Extras.txt"
+if [ ! -f "/config/logs/Extras.txt" ]; then
+    touch "/config/logs/Extras.txt"
+    chmod 666 "/config/logs/Extras.txt"
+fi
 exec &> >(tee -a "/config/logs/Extras.txt")
 
 if [ "$arrEventType" == "Test" ]; then
