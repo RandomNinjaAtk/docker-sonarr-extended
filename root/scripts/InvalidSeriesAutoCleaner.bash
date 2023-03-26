@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.004"
+scriptVersion="1.0.1"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -23,8 +23,10 @@ if [ -f "/config/logs/SeriesAutoDelete.txt" ]; then
 	find /config/logs -type f -name "InvalidSeriesAutoCleaner.txt" -size +1024k -delete
 fi
 
-touch "/config/logs/InvalidSeriesAutoCleaner.txt"
-chmod 666 "/config/logs/InvalidSeriesAutoCleaner.txt"
+if [ ! -f "/config/logs/InvalidSeriesAutoCleaner.txt" ]; then
+    touch "/config/logs/InvalidSeriesAutoCleaner.txt"
+    chmod 666 "/config/logs/InvalidSeriesAutoCleaner.txt"
+fi
 exec &> >(tee -a "/config/logs/InvalidSeriesAutoCleaner.txt")
 
 # Get invalid series tvdb id's
