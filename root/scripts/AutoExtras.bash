@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.001"
+scriptVersion="1.0.1"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -23,8 +23,10 @@ if [ -f "/config/logs/AutoExtras.txt" ]; then
 	find /config/logs -type f -name "AutoExtras.txt" -size +1024k -delete
 fi
 
-touch "/config/logs/AutoExtras.txt"
-chmod 666 "/config/logs/AutoExtras.txt"
+if [ ! -f "/config/logs/AutoExtras.txt" ]; then
+    touch "/config/logs/AutoExtras.txt"
+    chmod 666 "/config/logs/AutoExtras.txt"
+fi
 exec &> >(tee -a "/config/logs/AutoExtras.txt")
 
 sonarrSeriesList=$(curl -s --header "X-Api-Key:"${arrApiKey} --request GET  "$arrUrl/api/v3/series")
