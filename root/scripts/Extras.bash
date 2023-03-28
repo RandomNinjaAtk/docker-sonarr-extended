@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.1"
+scriptVersion="1.0.2"
 arrEventType="$sonarr_eventtype"
 arrItemId=$sonarr_series_id
 tmdbApiKey="3b7751e3179f796565d88fdb2fcdf426"
@@ -87,7 +87,12 @@ DownloadExtras () {
     IFS=',' read -r -a filters <<< "$extrasLanguages"
     for filter in "${filters[@]}"
     do    
-        tmdbVideosListData=$(curl -s "https://api.themoviedb.org/3/tv/$tmdbId/videos?api_key=$tmdbApiKey&language=$filter" | jq -r '.results[] | select(.site=="YouTube")')
+    	if [ "$useProxy" != "true" ]; then
+            tmdbVideosListData=$(curl -s "https://api.themoviedb.org/3/tv/$tmdbId/videos?api_key=$tmdbApiKey&language=$filter" | jq -r '.results[] | select(.site=="YouTube")')
+        else 
+            tmdbVideosListData=$(curl -x $proxyUrl:$proxyPort --proxy-user $proxyUsername:$proxyPassword -s "https://api.themoviedb.org/3/tv/$tmdbId/videos?api_key=$tmdbApiKey&language=$filter" | jq -r '.results[] | select(.site=="YouTube")')
+        fi
+	
         log "$itemTitle :: Searching for \"$filter\" extras..."
         if [ "$extrasType" == "all" ]; then
             tmdbVideosListDataIds=$(echo "$tmdbVideosListData" | jq -r ".id")
