@@ -3,6 +3,6 @@ if [ "$enableQueueCleaner" != "true" ]; then
 	echo "QueueCleaner.bash Script disabled, enable by setting parameter: enableQueueCleaner=true"
 	sleep infinity
 else
-  bash /config/extended/scripts/QueueCleaner.bash
+  su abc -s "/config/extended/scripts/QueueCleaner.bash"
 fi
 exit
