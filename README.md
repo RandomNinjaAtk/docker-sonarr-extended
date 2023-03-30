@@ -121,7 +121,7 @@ docker create \
   -e extrasOfficialOnly=false \
   -e plexUrl=http://x.x.x.x:32400 \
   -e plexToken=Token_Goes_Here \
-  randomninjaatk/radarr-extended:latest
+  randomninjaatk/sonarr-extended:latest
 ```
 
 
