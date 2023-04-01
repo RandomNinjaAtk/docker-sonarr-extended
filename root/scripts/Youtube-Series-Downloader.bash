@@ -99,7 +99,7 @@ for id in $(echo $sonarrSeriesIds); do
         if [ -z $downloadUrl ]; then
             network="$(echo "$tvdbPageData" | grep -i "/companies/youtube")"
             if [ ! -z "$network" ]; then 
-                downloadUrl=$(echo "$tvdbPageData" | grep -iwns "production code" -A 2 | sed 's/\ //g' | cut -d "-" -f2 | tail -n1)
+                downloadUrl=$(echo "$tvdbPageData" | grep -iws "production code" -A 2 | sed 's/\ //g' | tail -n1)
                 if [ ! -z $downloadUrl ]; then
                     downloadUrl="https://www.youtube.com/watch?v=$downloadUrl"
                 fi
