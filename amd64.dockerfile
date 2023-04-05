@@ -62,6 +62,9 @@ WORKDIR /config
 # copy local files
 COPY root/ /
 
+# ensure scripts are executable
+RUN chmod +x /scripts/*.bash
+
 # ports and volumes
 EXPOSE 8989
 VOLUME /config
