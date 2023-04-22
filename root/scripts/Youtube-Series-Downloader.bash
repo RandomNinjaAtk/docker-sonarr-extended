@@ -36,7 +36,7 @@ fi
 
 CookiesCheck () {
     # Check for cookies file
-    if find /config -type f -name "cookies.txt" | read; then
+    if find /config -type f -iname "cookies.txt" | read; then
         cookiesFile="$(find /config -type f -iname "cookies.txt" | head -n1)"
         log "Cookies File Found!"
     else
