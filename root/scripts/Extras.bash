@@ -136,6 +136,14 @@ DownloadExtras () {
                 extraFolderName="trailers"
             elif [ "$tmdbExtraType" == "Behind the Scenes" ]; then
                 extraFolderName="behind the scenes"
+            # Maybe make teasers optional?
+            elif [ "$tmdbExtraType" == "Teaser" ]; then
+                log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: INFO :: Teasers are ignored in preference of actual trailers."
+                continue
+            elif [ "$tmdbExtraType" == "Clip" ]; then
+                extraFolderName="clips"
+            elif [ "$tmdbExtraType" == "Opening Credits" ]; then
+                extraFolderName="backdrops"
             else
                 extraFolderName="other"
                 log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: ERROR :: Extra Type Not found, placing in \"other\" folder..."
