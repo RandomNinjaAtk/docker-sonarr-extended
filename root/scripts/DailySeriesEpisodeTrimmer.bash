@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.1"
+scriptVersion="1.0.2"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -49,7 +49,7 @@ if [ $seriesType != "daily" ]; then
 fi
 
 # Skip processing if less than 14 episodes were found to be downloaded
-if [ $seriesEpisodeIdsCount -lt 14 ]; then
+if [ $seriesEpisodeIdsCount -lt $maximumDailyEpisodes ]; then
 	log "$seriesTitle (ID:$seriesId) :: TYPE :: $seriesType :: ERROR :: Series has not exceeded 14 downloaded episodes ($seriesEpisodeIdsCount files found), skipping..."
 	exit
 fi
@@ -62,7 +62,7 @@ if [ $seriesType == daily ]; then
 	seriesRefreshRequired=false
 	for id in $seriesEpisodeIds; do
 		processId=$(( $processId + 1 ))
-		if [ $processId -gt 14 ]; then
+		if [ $processId -gt $maximumDailyEpisodes ]; then
 			episodeData=$(curl -s "http://localhost:8989/api/v3/episode/$id?apikey=$arrApiKey")
 			episodeSeriesId=$(echo "$episodeData" | jq -r ".seriesId")
 			episodeTitle=$(echo "$episodeData" | jq -r ".title")
