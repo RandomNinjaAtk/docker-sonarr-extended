@@ -89,8 +89,9 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e extrasType=all` | all or trailers :: all downloads all available videos (trailers, clips, featurette, etc...) :: trailers only downloads trailers |
 | `-e extrasLanguages=en-US,it-IT` | Set the desired language for Extras, all languages will be processed... (this is a "," separated list of TMDB language codes, get the code from there sites language opitons, example: en-US) |
 | `-e extrasOfficialOnly=false` | true = enabled :: Skips extras that are not considered/marked as Official from TMDB site. |
-| `-e plexUrl=http://x.x.x.x:32400` | ONLY used if PlexNotify.bash is used...
-| `-e plexToken=Token_Goes_Here` | ONLY used if PlexNotify.bash is used...
+| `-e plexUrl=http://x.x.x.x:32400` | ONLY used if PlexNotify.bash is used... |
+| `-e plexToken=Token_Goes_Here` | ONLY used if PlexNotify.bash is used... |
+| `-e videoFormat="bestvideo*+bestaudio/best"` | OPTIONAL - yt-dlp video selection paramater, do not change unless you know what your doing.... |
 | `-e PUID=1000` | for UserID - see below for explanation |
 | `-e PGID=1000` | for GroupID - see below for explanation |
 | `-e TZ=Europe/London` | Specify a timezone to use EG Europe/London, this is required for Sonarr |
