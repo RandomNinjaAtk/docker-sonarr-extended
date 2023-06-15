@@ -92,6 +92,7 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e plexUrl=http://x.x.x.x:32400` | ONLY used if PlexNotify.bash is used... |
 | `-e plexToken=Token_Goes_Here` | ONLY used if PlexNotify.bash is used... |
 | `-e videoFormat="bestvideo*+bestaudio/best"` | OPTIONAL - yt-dlp video selection paramater, do not change unless you know what your doing.... |
+| `-e maximumDailyEpisodes=14` | OPTIONAL - Adjust the maximum number of daily series episodes to keep when using the Daily Episode Trimmer Script... |
 | `-e PUID=1000` | for UserID - see below for explanation |
 | `-e PGID=1000` | for GroupID - see below for explanation |
 | `-e TZ=Europe/London` | Specify a timezone to use EG Europe/London, this is required for Sonarr |
