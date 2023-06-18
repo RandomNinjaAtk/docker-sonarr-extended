@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.2"
+scriptVersion="1.0.3"
 
 if [ -z "$arrUrl" ] || [ -z "$arrApiKey" ]; then
   arrUrlBase="$(cat /config/config.xml | xq | jq -r .Config.UrlBase)"
@@ -50,7 +50,7 @@ fi
 
 # Skip processing if less than 14 episodes were found to be downloaded
 if [ $seriesEpisodeIdsCount -lt $maximumDailyEpisodes ]; then
-	log "$seriesTitle (ID:$seriesId) :: TYPE :: $seriesType :: ERROR :: Series has not exceeded 14 downloaded episodes ($seriesEpisodeIdsCount files found), skipping..."
+	log "$seriesTitle (ID:$seriesId) :: TYPE :: $seriesType :: ERROR :: Series has not exceeded $maximumDailyEpisodes downloaded episodes ($seriesEpisodeIdsCount files found), skipping..."
 	exit
 fi
 
