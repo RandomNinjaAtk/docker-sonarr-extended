@@ -5,7 +5,7 @@ ENV SMA_PATH /usr/local/sma
 ENV UPDATE_SMA FALSE
 ENV SMA_APP Sonarr
 ENV videoFormat="bestvideo*+bestaudio/best"
-ENV maximumDailyEpisodes=14
+ENV maximumDailyEpisodes=7
 
 RUN \
 	echo "************ install packages ************" && \
