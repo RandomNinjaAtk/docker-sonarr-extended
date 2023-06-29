@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-scriptVersion="1.0.2"
+scriptVersion="1.0.3"
 arrEventType="$sonarr_eventtype"
 arrItemId=$sonarr_series_id
 tmdbApiKey="3b7751e3179f796565d88fdb2fcdf426"
@@ -138,14 +138,6 @@ DownloadExtras () {
                 extraFolderName="behind the scenes"
             else
                 extraFolderName="other"
-                log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: ERROR :: Extra Type Not found, placing in \"other\" folder..."
-                if [ -f "/config/logs/Extras-InvalidType.txt" ]; then
-                    if cat "/config/logs/Extras-InvalidType.txt" | grep "$tmdbExtraType" | read; then
-                        sleep 0.01
-                    else
-                        echo "$tmdbExtraType" >> "/config/logs/Extras-InvalidType.txt"
-                    fi
-                fi
             fi
 
             if [ ! -d "$itemPath/$extraFolderName" ]; then
@@ -154,8 +146,13 @@ DownloadExtras () {
             fi
 
             finalPath="$itemPath/$extraFolderName"
+	    if [ "$extraFolderName" == "other" ]; then
+     		finalFileName="$tmdbExtraTitleClean ($tmdbExtraType)"
+     	    else
+            	finalFileName="$tmdbExtraTitleClean"
+	    fi
 
-            if [ -f "$finalPath/$tmdbExtraTitleClean.mkv" ]; then
+            if [ -f "$finalPath/$finalFileName.mkv" ]; then
                 log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: Already Downloaded, skipping..."
                 continue
             fi
@@ -164,26 +161,26 @@ DownloadExtras () {
 
             log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: Downloading (yt-dlp :: $videoFormat)..."
             if [ ! -z "$cookiesFile" ]; then
-                yt-dlp -f "$videoFormat" --no-video-multistreams --cookies "$cookiesFile" -o "$finalPath/$tmdbExtraTitleClean" --write-sub --sub-lang $videoLanguages --embed-subs --merge-output-format mkv --no-mtime --geo-bypass $ytdlpExtraOpts "https://www.youtube.com/watch?v=$tmdbExtraKey" &>/dev/null
+                yt-dlp -f "$videoFormat" --no-video-multistreams --cookies "$cookiesFile" -o "$finalPath/$finalFileName" --write-sub --sub-lang $videoLanguages --embed-subs --merge-output-format mkv --no-mtime --geo-bypass $ytdlpExtraOpts "https://www.youtube.com/watch?v=$tmdbExtraKey" &>/dev/null
             else
-                yt-dlp -f "$videoFormat" --no-video-multistreams -o "$finalPath/$tmdbExtraTitleClean" --write-sub --sub-lang $videoLanguages --embed-subs --merge-output-format mkv --no-mtime --geo-bypass $ytdlpExtraOpts "https://www.youtube.com/watch?v=$tmdbExtraKey" &>/dev/null
+                yt-dlp -f "$videoFormat" --no-video-multistreams -o "$finalPath/$finalFileName" --write-sub --sub-lang $videoLanguages --embed-subs --merge-output-format mkv --no-mtime --geo-bypass $ytdlpExtraOpts "https://www.youtube.com/watch?v=$tmdbExtraKey" &>/dev/null
             fi
-            if [ -f "$finalPath/$tmdbExtraTitleClean.mkv" ]; then
+            if [ -f "$finalPath/$finalFileName.mkv" ]; then
                 log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: Compete"
-                chmod 666 "$finalPath/$tmdbExtraTitleClean.mkv"
+                chmod 666 "$finalPath/$finalFileName.mkv"
             else
                 log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle ($tmdbExtraKey) :: ERROR :: Download Failed"
                 continue
             fi
 
-            if python3 /usr/local/sma/manual.py --config "/sma.ini" -i "$finalPath/$tmdbExtraTitleClean.mkv" -nt &>/dev/null; then
+            if python3 /usr/local/sma/manual.py --config "/sma.ini" -i "$finalPath/$finalFileName.mkv" -nt &>/dev/null; then
                 sleep 0.01
                 log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle :: Processed with SMA..."
                 rm  /usr/local/sma/config/*log*
             else
                 log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle :: ERROR :: SMA Processing Error"
-                rm "$finalPath/$tmdbExtraTitleClean.mkv"
-                log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle :: INFO: deleted: $finalPath/$tmdbExtraTitleClean.mkv"
+                rm "$finalPath/$finalFileName.mkv"
+                log "$itemTitle :: $i of $tmdbVideosListDataIdsCount :: $tmdbExtraType :: $tmdbExtraTitle :: INFO: deleted: $finalPath/$finalFileName.mkv"
             fi
             updatePlex="true"
         done
